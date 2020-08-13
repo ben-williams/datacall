@@ -22,6 +22,13 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(datacall)
+species = "NORK" # northern rockfish
+afsc_user = "your_afsc_username"
+afsc_pwd = "your_afsc_password"
+akfin_user = "your_akfn_username"
+akfin_pwd = "your_akfin_password"
+
 raw_data("NORK", 2020, afsc_user, afsc_pwd, akfin_user, akfin_pwd)
 ```
+The output will be raw data pulls that will be placed in a folder called "data/raw".
 
