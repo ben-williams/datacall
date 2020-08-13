@@ -9,13 +9,13 @@
 #' @param ...
 #'
 #' @return
+#' @importFrom dplyr %>%
 #' @export raw_data
 #'
 #' @examples
 #'raw_data("NORK", 2020, afsc_user, afsc_pwd, akfin_user, akfin_pwd)
 #'
 raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, ...){
-  library(dplyr)
 
   if(species == "NORK"){
     afsc_species = 30420
