@@ -1,0 +1,19 @@
+Package: datacall
+Title: Pull in data - then prep it for fishery stock assessments
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Ben",
+           family = "Williams",
+           role = c("aut", "cre"),
+           email = "ben.williams@noaa.gov")
+Description: Pulls in raw data, cleans data, touch o' analysis, output .DAT file for assessment.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to
+    pick a license
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    RODBC,
+    dplyr,
+    tidyr
