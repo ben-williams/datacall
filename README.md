@@ -11,11 +11,9 @@ You must be able to have a connection to the AFSC & AKFIN data servers (e.g., VP
 
 You can install the released version of datacall from [github](https://github.com/ben-williams/datacall) with:
 
+``` r
 # install.packages("devtools")
 devtools::install_github("ben-williams/datacall")
-
-``` r
-install.packages("datacall")
 ```
 
 ## Example
