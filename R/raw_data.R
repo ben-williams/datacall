@@ -1,6 +1,6 @@
 #' Raw data call from AFSC and AKFIN servers
 #'
-#' @param species is the species of interest e.g., "NORK
+#' @param species is the species of interest e.g., "NORK", "DUSK"
 #' @param year is the year you would like data through
 #' @param afsc_user AFSC server username
 #' @param afsc_pwd AFSC server password
@@ -20,14 +20,22 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
   if(species == "NORK"){
     afsc_species = 30420
     norpac_species = 303
-    region = "GOA"
   }
 
-  if (!dir.exists("data/raw")){
-  dir.create("data/raw", recursive=TRUE)
+  if(species == "DUSK"){
+     afsc_species =  30150
+     afsc_species2 = 30152
+     norpac_species = 330
+  }
+
+  region = "GOA"
+
+  if (!dir.exists(here::here("data/raw"))){
+  dir.create(here::here("data/raw", recursive=TRUE))
   }
 
   akfin = RODBC::odbcConnect("akfin", uid=akfin_user, pwd=akfin_pwd)
+
 
   # fishery catch data ----
   RODBC::sqlQuery(akfin,
@@ -44,7 +52,7 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
          AND COUNCIL.COMPREHENSIVE_BLEND_CA.YEAR <= ", year,"
                 AND COUNCIL.COMPREHENSIVE_BLEND_CA.SPECIES_GROUP_CODE = '", species,"'"),
            believeNRows=FALSE) %>%
-    write.csv("data/raw/fishery_catch_data.csv")
+    write.csv(here::here("data/raw/fishery_catch_data.csv"))
 
 
 
@@ -62,7 +70,7 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
                 AND NORPAC.DEBRIEFED_HAUL_MV.FMP_AREA = 'GOA'
                 AND NORPAC.DEBRIEFED_SPCOMP_MV.SPECIES = ", norpac_species),
            believeNRows=FALSE) %>%
-    write.csv("data/raw/fishery_obs_data.csv")
+    write.csv(here::here("data/raw/fishery_obs_data.csv"))
 
   # fishery age comp ----
   age_data <- RODBC::sqlQuery(akfin,
@@ -96,7 +104,7 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
 
 
   bind_cols(age_data, haul_join, port_join) %>%
-    write.csv("data/raw/fishery_age_comp_data.csv")
+    write.csv(here::here("data/raw/fishery_age_comp_data.csv"))
 
   # Fishery size comp ----
 
@@ -113,7 +121,7 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
                 AND NORPAC.DEBRIEFED_AGE_MV.SPECIES = ", norpac_species),
            believeNRows=FALSE) -> age2
 
-  write.csv(age2, "data/raw/fishery_size_comp_data.csv")
+  write.csv(age2, here::here("data/raw/fishery_size_comp_data.csv"))
 
   length_data <- RODBC::sqlQuery(akfin,
                           paste0("SELECT NORPAC.DEBRIEFED_LENGTH_MV.YEAR,
@@ -144,12 +152,13 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
 
   bind_cols(length_data, length_haul, length_port) %>%
     filter(YEAR %in% unique(age2$YEAR)) %>%
-    write.csv("data/raw/fishery_size_comp_freq.csv")
+    write.csv(here::here("data/raw/fishery_size_comp_freq.csv"))
 
   RODBC::odbcClose(akfin)
 
   # survey data ----
   afsc = RODBC::odbcConnect("afsc", uid=afsc_user, pwd=afsc_pwd)
+
 
   # survey age comp ----
   RODBC::sqlQuery(afsc,
@@ -163,8 +172,27 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
           GOA.AGECOMP_TOTAL.STANDARD_DEVIATION
           FROM GOA.AGECOMP_TOTAL
                  WHERE GOA.AGECOMP_TOTAL.SPECIES_CODE = ", afsc_species),
-           believeNRows=FALSE) %>%
-    write.csv("data/raw/srv_age_comp.csv")
+           believeNRows=FALSE) -> sac
+
+  if(species!="DUSK"){
+    write.csv(sac, here::here("data/raw/srv_age_comp.csv"))
+  } else {
+    bind_rows(srv,
+    RODBC::sqlQuery(afsc,
+                    paste0("SELECT GOA.AGECOMP_TOTAL.SURVEY,
+          GOA.AGECOMP_TOTAL.SURVEY_YEAR,
+          GOA.AGECOMP_TOTAL.SPECIES_CODE,
+          GOA.AGECOMP_TOTAL.SEX,
+          GOA.AGECOMP_TOTAL.AGE,
+          GOA.AGECOMP_TOTAL.AGEPOP,
+          GOA.AGECOMP_TOTAL.MEAN_LENGTH,
+          GOA.AGECOMP_TOTAL.STANDARD_DEVIATION
+          FROM GOA.AGECOMP_TOTAL
+                 WHERE GOA.AGECOMP_TOTAL.SPECIES_CODE = ", afsc_species),
+                    believeNRows=FALSE)) %>%
+          write.csv(here::here("data/raw/srv_age_comp.csv"))
+      }
+
 
   RODBC::sqlQuery(afsc,
            paste0("SELECT RACEBASE.SPECIMEN.CRUISE,
@@ -184,11 +212,39 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
           ON RACEBASE.HAUL.HAULJOIN = RACEBASE.SPECIMEN.HAULJOIN)
           INNER JOIN GOA.BIENNIAL_SURVEYS
           ON RACEBASE.SPECIMEN.CRUISEJOIN = GOA.BIENNIAL_SURVEYS.CRUISEJOIN
-          WHERE (((RACEBASE.SPECIMEN.SPECIES_CODE)=",afsc_species,")
+          WHERE (((RACEBASE.SPECIMEN.SPECIES_CODE)=", afsc_species,")
           AND ((RACEBASE.SPECIMEN.REGION)='GOA')
                  AND ((RACEBASE.HAUL.PERFORMANCE)>=0))"),
-           believeNRows=FALSE) %>%
-    write.csv("data/raw/srv_age_specimens.csv")
+           believeNRows=FALSE) -> saas
+
+  if(species != "DUSK"){
+    write.csv(saas, here::here("data/raw/srv_age_specimens.csv"))
+  } else {
+    bind_rows(saas,
+    RODBC::sqlQuery(afsc,
+                    paste0("SELECT RACEBASE.SPECIMEN.CRUISE,
+          GOA.BIENNIAL_SURVEYS.YEAR,
+          RACEBASE.SPECIMEN.HAULJOIN,
+          RACEBASE.SPECIMEN.CRUISEJOIN,
+          RACEBASE.SPECIMEN.SPECIES_CODE,
+          RACEBASE.SPECIMEN.SPECIMENID,
+          RACEBASE.SPECIMEN.LENGTH,
+          RACEBASE.SPECIMEN.SEX,
+          RACEBASE.SPECIMEN.AGE,
+          RACEBASE.SPECIMEN.WEIGHT,
+          RACEBASE.SPECIMEN.REGION,
+          RACEBASE.HAUL.PERFORMANCE
+          FROM (RACEBASE.HAUL
+          INNER JOIN RACEBASE.SPECIMEN
+          ON RACEBASE.HAUL.HAULJOIN = RACEBASE.SPECIMEN.HAULJOIN)
+          INNER JOIN GOA.BIENNIAL_SURVEYS
+          ON RACEBASE.SPECIMEN.CRUISEJOIN = GOA.BIENNIAL_SURVEYS.CRUISEJOIN
+          WHERE (((RACEBASE.SPECIMEN.SPECIES_CODE)=", afsc_species2,")
+          AND ((RACEBASE.SPECIMEN.REGION)='GOA')
+                 AND ((RACEBASE.HAUL.PERFORMANCE)>=0))"),
+                    believeNRows=FALSE)) %>%
+      write.csv("data/raw/srv_age_specimens.csv")
+  }
 
 
   RODBC::sqlQuery(afsc,
@@ -211,8 +267,36 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
                   GOA.BIOMASS_TOTAL
                   WHERE
                   (((GOA.BIOMASS_TOTAL.SPECIES_CODE)=", afsc_species,"))"),
-           believeNRows=FALSE) %>%
-    write.csv("data/raw/srv_biomass.csv")
+           believeNRows=FALSE) -> sb
+
+  if(species != "DUSK"){
+    write.csv(sb, here::here("data/raw/srv_biomass.csv"))
+  } else {
+    bind_rows(sb,
+    RODBC::sqlQuery(afsc,
+                    paste0("SELECT GOA.BIOMASS_TOTAL.SURVEY,
+             GOA.BIOMASS_TOTAL.YEAR,
+             GOA.BIOMASS_TOTAL.SPECIES_CODE,
+             GOA.BIOMASS_TOTAL.HAUL_COUNT,
+             GOA.BIOMASS_TOTAL.CATCH_COUNT,
+             GOA.BIOMASS_TOTAL.MEAN_WGT_CPUE,
+             GOA.BIOMASS_TOTAL.VAR_WGT_CPUE,
+             GOA.BIOMASS_TOTAL.MEAN_NUM_CPUE,
+             GOA.BIOMASS_TOTAL.VAR_NUM_CPUE,
+             GOA.BIOMASS_TOTAL.TOTAL_BIOMASS,
+             GOA.BIOMASS_TOTAL.BIOMASS_VAR,
+             GOA.BIOMASS_TOTAL.MIN_BIOMASS,
+             GOA.BIOMASS_TOTAL.MAX_BIOMASS,
+             GOA.BIOMASS_TOTAL.TOTAL_POP,
+             GOA.BIOMASS_TOTAL.POP_VAR
+                  FROM
+                  GOA.BIOMASS_TOTAL
+                  WHERE
+                  (((GOA.BIOMASS_TOTAL.SPECIES_CODE)=", afsc_species2,"))"),
+                    believeNRows=FALSE)) %>%
+      write.csv("data/raw/srv_biomass.csv")
+    }
+
 
   # trawl survey size comp data  ----
   RODBC::sqlQuery(afsc,
@@ -227,8 +311,27 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
              FROM GOA.SIZECOMP_TOTAL
                     WHERE
                     (((GOA.SIZECOMP_TOTAL.SPECIES_CODE)=", afsc_species,"))"),
-           believeNRows=FALSE) %>%
-    write.csv("data/raw/srv_size_comp.csv")
+           believeNRows=FALSE) -> scc
+
+  if(species != "DUSK"){
+    write.csv(scc, here::here("data/raw/srv_size_comp.csv"))
+  } else {
+    bind_rows(scc,
+    RODBC::sqlQuery(afsc,
+                    paste0("SELECT GOA.SIZECOMP_TOTAL.SURVEY,
+             GOA.SIZECOMP_TOTAL.YEAR,
+             GOA.SIZECOMP_TOTAL.SPECIES_CODE,
+             GOA.SIZECOMP_TOTAL.LENGTH,
+             GOA.SIZECOMP_TOTAL.MALES,
+             GOA.SIZECOMP_TOTAL.FEMALES,
+             GOA.SIZECOMP_TOTAL.UNSEXED,
+             GOA.SIZECOMP_TOTAL.TOTAL
+             FROM GOA.SIZECOMP_TOTAL
+                    WHERE
+                    (((GOA.SIZECOMP_TOTAL.SPECIES_CODE)=", afsc_species2,"))"),
+                    believeNRows=FALSE)) %>%
+      write.csv(here::here("data/raw/srv_size_comp.csv"))
+  }
 
   RODBC::sqlQuery(afsc,
            paste0("SELECT RACEBASE.LENGTH.CRUISEJOIN,
@@ -246,8 +349,31 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
              WHERE (((RACEBASE.LENGTH.REGION)='GOA')
              AND ((RACEBASE.LENGTH.SPECIES_CODE)=", afsc_species,")
              AND ((RACEBASE.HAUL.PERFORMANCE)>=0))"),
-           believeNRows=FALSE) %>%
-    write.csv("data/raw/srv_size_freq.csv")
+           believeNRows=FALSE) -> ssf
+
+  if(species != "DUSK"){
+    write.csv(ssf, here::here("data/raw/srv_size_freq.csv"))
+  } else {
+    bind_rows(ssf,
+              RODBC::sqlQuery(afsc,
+                              paste0("SELECT RACEBASE.LENGTH.CRUISEJOIN,
+             RACEBASE.LENGTH.REGION,
+             RACEBASE.LENGTH.SPECIES_CODE,
+             RACEBASE.LENGTH.LENGTH,
+             RACEBASE.LENGTH.FREQUENCY,
+             GOA.BIENNIAL_SURVEYS.YEAR,
+             RACEBASE.HAUL.PERFORMANCE,
+             RACEBASE.HAUL.HAULJOIN
+             FROM (RACEBASE.HAUL INNER JOIN RACEBASE.LENGTH
+             ON RACEBASE.HAUL.HAULJOIN = RACEBASE.LENGTH.HAULJOIN)
+             INNER JOIN GOA.BIENNIAL_SURVEYS
+             ON RACEBASE.LENGTH.CRUISEJOIN = GOA.BIENNIAL_SURVEYS.CRUISEJOIN
+             WHERE (((RACEBASE.LENGTH.REGION)='GOA')
+             AND ((RACEBASE.LENGTH.SPECIES_CODE)=", afsc_species2,")
+             AND ((RACEBASE.HAUL.PERFORMANCE)>=0))"),
+                              believeNRows=FALSE)) %>%
+      write.csv(ssf, here::here("data/raw/srv_size_freq.csv"))
+  }
 
   # size at age data ----
   RODBC::sqlQuery(afsc,
@@ -261,8 +387,26 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
                     WHERE (((RACEBASE.SPECIMEN.SPECIES_CODE)=", afsc_species,")
                     AND ((RACEBASE.SPECIMEN.REGION)='GOA')
                     AND ((RACEBASE.HAUL.PERFORMANCE)>=0))"),
-           believeNRows=FALSE) %>%
-    write.csv("data/raw/srv_saa_age.csv")
+           believeNRows=FALSE) -> saa
+
+  if(species != "DUSK"){
+    write.csv(saa, here::here("data/raw/srv_saa_age.csv"))
+  } else {
+    bind_rows(saa,
+              RODBC::sqlQuery(afsc,
+                              paste0("SELECT * FROM
+                    (RACEBASE.HAUL
+                    INNER JOIN
+                    RACEBASE.SPECIMEN
+                    ON RACEBASE.HAUL.HAULJOIN = RACEBASE.SPECIMEN.HAULJOIN)
+                    INNER JOIN GOA.BIENNIAL_SURVEYS
+                    ON RACEBASE.SPECIMEN.CRUISEJOIN = GOA.BIENNIAL_SURVEYS.CRUISEJOIN
+                    WHERE (((RACEBASE.SPECIMEN.SPECIES_CODE)=", afsc_species2,")
+                    AND ((RACEBASE.SPECIMEN.REGION)='GOA')
+                    AND ((RACEBASE.HAUL.PERFORMANCE)>=0))"),
+                              believeNRows=FALSE)) %>%
+      write.csv(here::here("data/raw/srv_saa_age.csv"))
+  }
 
   RODBC::sqlQuery(afsc,
            paste0("SELECT * FROM
@@ -275,8 +419,26 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
                      WHERE (((RACEBASE.LENGTH.REGION)='GOA')
                      AND ((RACEBASE.LENGTH.SPECIES_CODE)=", afsc_species,")
                      AND ((RACEBASE.HAUL.PERFORMANCE)>=0))"),
-           believeNRows=FALSE) %>%
-    write.csv("data/raw/srv_saa_length.csv")
+           believeNRows=FALSE) -> sal
+
+  if(species != "DUSK"){
+    write.csv(sal, here::here("data/raw/srv_saa_length.csv"))
+  } else {
+    bind_rows(sal,
+              RODBC::sqlQuery(afsc,
+                              paste0("SELECT * FROM
+                     (RACEBASE.HAUL
+                     INNER JOIN
+                     RACEBASE.LENGTH
+                     ON RACEBASE.HAUL.HAULJOIN = RACEBASE.LENGTH.HAULJOIN)
+                     INNER JOIN GOA.BIENNIAL_SURVEYS
+                     ON RACEBASE.LENGTH.CRUISEJOIN = GOA.BIENNIAL_SURVEYS.CRUISEJOIN
+                     WHERE (((RACEBASE.LENGTH.REGION)='GOA')
+                     AND ((RACEBASE.LENGTH.SPECIES_CODE)=", afsc_species2,")
+                     AND ((RACEBASE.HAUL.PERFORMANCE)>=0))"),
+                              believeNRows=FALSE)) %>%
+      write.csv(here::here("data/raw/srv_saa_length.csv"))
+  }
 
   RODBC::odbcClose(afsc)
 
