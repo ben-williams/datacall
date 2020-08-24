@@ -16,4 +16,7 @@ RoxygenNote: 7.1.1
 Imports: 
     RODBC,
     dplyr,
-    tidyr
+    tidyr,
+    R2admb,
+    funcr,
+    Hmisc
