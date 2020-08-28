@@ -1,0 +1,52 @@
+
+#' Fishery size composition data
+#'
+#' @param year
+#' @param lenbins
+#' @param recage
+#'
+#' @return
+#' @export fish_size_comp
+#'
+#' @examples
+fish_size_comp <- function(year, recage, lenbins = NULL){
+
+    if(is.null(lenbins)){
+      lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
+    } else {
+      lenbins = read.csv(lenbins)
+    }
+
+  read.csv(here::here(year, "data/raw/fishery_size_comp_data.csv")) %>%
+    dplyr::rename_all(tolower) %>%
+    dplyr::filter(!is.na(age), age>=recage) %>%
+    dplyr::group_by(year) %>%
+    dplyr::tally(name = "age")%>%
+    dplyr::filter(age>49) %>%
+    dplyr::ungroup() -> ages
+
+  read.csv(here::here(year, "data/raw/fishery_size_comp_freq.csv")) %>%
+    dplyr::rename_all(tolower) %>%
+    dplyr::filter(!(year %in% unique(ages$year)) & year>1990) %>%
+    dplyr::group_by(year) %>%
+    dplyr::mutate(tot = sum(frequency)) %>%
+    dplyr::mutate(n_h = length(unique(na.omit(haul_join))) + length(unique(na.omit(port_join)))) %>%
+    dplyr::group_by(year, length) %>%
+    dplyr::summarise(n_s = mean(tot),
+              n_h = mean(n_h),
+              length_tot = sum(frequency)) %>%
+    dplyr::mutate(prop = length_tot / n_s) %>%
+    dplyr::left_join(expand.grid(year = unique(.$year), length = lenbins), .) %>%
+    tidyr::replace_na(list(prop = 0)) %>%
+    dplyr::group_by(year) %>%
+    dplyr::mutate(SA_Index = 1,
+           n_s = mean(n_s, na.rm = T),
+           n_h = mean(n_h, na.rm = T)) %>%
+    dplyr::select(-length_tot) %>%
+    tidyr::pivot_wider(names_from = length, values_from = prop) -> fish_size_comp
+
+  write.csv(fish_size_comp, here::here(year, "data/output/fish_size_comp.csv"))
+
+  fish_size_comp
+
+}

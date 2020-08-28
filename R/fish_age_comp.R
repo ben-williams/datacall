@@ -1,0 +1,39 @@
+#' Fishery age composition
+#'
+#' @param year
+#' @param recage
+#' @param plus_age
+#'
+#' @return
+#' @export  fish_age_comp
+#'
+#' @examples
+fish_age_comp <- function(year, recage, plus_age){
+
+read.csv(here::here(year, "data/raw/fishery_age_comp_data.csv")) %>%
+  dplyr::rename_all(tolower) %>%
+  dplyr::filter(specimen_type!=3, !is.na(age), age>=recage) %>%
+  dplyr::mutate(age = ifelse(age>plus_age, plus_age, age)) %>%
+  dplyr::group_by(year) %>%
+  dplyr::mutate(tot = dplyr::n()) %>%
+  dplyr::filter(tot>49) %>%
+  dplyr::mutate(n_h = length(unique(na.omit(haul_join))) + length(unique(na.omit(port_join)))) %>%
+  dplyr::group_by(year, age) %>%
+  dplyr::summarise(n_s = mean(tot),
+            n_h = mean(n_h),
+            age_tot = dplyr::n()) %>%
+  dplyr::mutate(prop = age_tot / n_s) %>%
+  dplyr::left_join(expand.grid(year = unique(.$year), age = recage:plus_age), .) %>%
+  tidyr::replace_na(list(prop = 0)) %>%
+  dplyr::group_by(year) %>%
+  dplyr::mutate(AA_Index = 1,
+         n_s = mean(n_s, na.rm = T),
+         n_h = mean(n_h, na.rm = T)) %>%
+  dplyr::select(-age_tot) %>%
+  tidyr::pivot_wider(names_from = age, values_from = prop) -> fish_age_comp
+
+  write.csv(here::here(year, "data/output/fish_age_comp.csv"))
+
+  fish_age_comp
+
+}

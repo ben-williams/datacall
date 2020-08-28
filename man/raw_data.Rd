@@ -7,7 +7,7 @@
 raw_data(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, ...)
 }
 \arguments{
-\item{species}{is the species of interest e.g., "NORK}
+\item{species}{is the species of interest e.g., "NORK", "DUSK"}
 
 \item{year}{is the year you would like data through}
 

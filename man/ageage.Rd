@@ -2,12 +2,14 @@
 % Please edit documentation in R/ageage.R
 \name{ageage}
 \alias{ageage}
-\title{age error model}
+\title{Title}
 \usage{
 ageage(
-  read_tester_loc_file,
+  reader_tester = NULL,
   species,
+  year,
   admb_home = NULL,
+  region = "GOA",
   recage = 2,
   plus_age = 45,
   max_age = 100,
@@ -15,11 +17,17 @@ ageage(
 )
 }
 \arguments{
+\item{species}{= "NORK"}
+
+\item{year}{= year of the assessment}
+
 \item{...}{}
+
+\item{read_tester}{= location and file name (if left blank it looks for a file in "data/user_input/reader_tester.csv")}
 }
 \value{
 
 }
 \description{
-age error model
+Title
 }

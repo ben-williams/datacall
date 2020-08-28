@@ -4,7 +4,7 @@
 \alias{modeldir}
 \title{model function directory and tpl files}
 \usage{
-modeldir()
+modeldir(year)
 }
 \value{
 

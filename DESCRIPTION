@@ -20,4 +20,5 @@ Imports:
     R2admb,
     funcr,
     Hmisc,
-    here
+    here,
+    magrittr

@@ -1,4 +1,3 @@
-
 DATA_SECTION
 
   init_int nobs
