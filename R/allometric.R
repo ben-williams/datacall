@@ -183,6 +183,9 @@ allometric <- function(year, admb_home, recage, plus_age){
   R2admb::run_admb("wVBL", verbose = TRUE)
 
   REP <- readLines("wVBL.REP", warn=FALSE)
+
+  setwd(here::here())
+
   Winf = as.numeric(sub(".*? ", "", REP[1]))
   k = as.numeric(sub(".*? ", "", REP[2]))
   t0 = as.numeric(sub(".*? ", "", REP[3]))
@@ -193,8 +196,9 @@ allometric <- function(year, admb_home, recage, plus_age){
   Wbar[nages_M] = 0.5 * (Wbar[nages_M] + Winf)
   Wbar = round(Wbar, digits=1)
   Wbar_params = cbind(Winf, k, t0, beta_lw)
-  write.csv(Wbar_params, "Wbar_params.csv")
-  setwd(here::here())
+
+  write.csv(Wbar_params, here::here(year, "data/output/Wbar_params.csv"))
+  write.csv(Wbar, here::here(year, "data/output/waa.csv"))
 
   Wbar
 }

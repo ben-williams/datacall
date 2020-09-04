@@ -38,7 +38,7 @@ survey_age_comp <- function(year, recage, plus_age){
     tidyr::pivot_wider(names_from = age, values_from = prop) %>%
     dplyr::arrange(year) -> age_comp
 
-  write.csv(age_comp, here::here(year, "data/output/survey_age_comp.csv"))
+  readr::write_csv(age_comp, here::here(year, "data/output/survey_age_comp.csv"))
 
   age_comp
 

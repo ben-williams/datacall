@@ -44,7 +44,7 @@ survey_size_comp <- function(year, lenbins = NULL){
                   n_h = mean(n_h, na.rm = T)) %>%
     tidyr::pivot_wider(names_from = length, values_from = prop) -> size_comp
 
-  write.csv(size_comp, here::here(year, "data/output/survey_size_comp.csv"))
+  readr::write_csv(size_comp, here::here(year, "data/output/survey_size_comp.csv"))
 
   size_comp
 }

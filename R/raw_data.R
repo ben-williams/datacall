@@ -121,7 +121,7 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
                 AND NORPAC.DEBRIEFED_AGE_MV.SPECIES = ", norpac_species),
            believeNRows=FALSE) -> age2
 
-  write.csv(age2, here::here("data/raw/fishery_size_comp_data.csv"))
+  write.csv(age2, here::here(year, "data/raw/fishery_size_comp_data.csv"))
 
   length_data <- RODBC::sqlQuery(akfin,
                           paste0("SELECT NORPAC.DEBRIEFED_LENGTH_MV.YEAR,

@@ -27,7 +27,7 @@ fish_size_comp <- function(year, recage, lenbins = NULL){
 
   read.csv(here::here(year, "data/raw/fishery_size_comp_freq.csv")) %>%
     dplyr::rename_all(tolower) %>%
-    dplyr::filter(!(year %in% unique(ages$year)) & year>1990) %>%
+    dplyr::filter(!(year %in% unique(ages$year))) %>%
     dplyr::group_by(year) %>%
     dplyr::mutate(tot = sum(frequency)) %>%
     dplyr::mutate(n_h = length(unique(na.omit(haul_join))) + length(unique(na.omit(port_join)))) %>%
@@ -45,7 +45,7 @@ fish_size_comp <- function(year, recage, lenbins = NULL){
     dplyr::select(-length_tot) %>%
     tidyr::pivot_wider(names_from = length, values_from = prop) -> fish_size_comp
 
-  write.csv(fish_size_comp, here::here(year, "data/output/fish_size_comp.csv"))
+  readr::write_csv(fish_size_comp, here::here(year, "data/output/fish_size_comp.csv"))
 
   fish_size_comp
 
