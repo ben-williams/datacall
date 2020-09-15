@@ -108,21 +108,6 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
 
   # Fishery size comp ----
 
-  RODBC::sqlQuery(akfin,
-           paste0("SELECT NORPAC.DEBRIEFED_AGE_MV.YEAR,
-                NORPAC.DEBRIEFED_AGE_MV.FMP_AREA,
-                NORPAC.DEBRIEFED_AGE_MV.SPECIES,
-                NORPAC.DEBRIEFED_AGE_MV.LENGTH,
-                NORPAC.DEBRIEFED_AGE_MV.WEIGHT,
-                NORPAC.DEBRIEFED_AGE_MV.AGE,
-                NORPAC.DEBRIEFED_AGE_MV.PERFORMANCE
-                FROM NORPAC.DEBRIEFED_AGE_MV
-                WHERE NORPAC.DEBRIEFED_AGE_MV.FMP_AREA = 'GOA'
-                AND NORPAC.DEBRIEFED_AGE_MV.SPECIES = ", norpac_species),
-           believeNRows=FALSE) -> age2
-
-  write.csv(age2, here::here(year, "data/raw/fishery_size_comp_data.csv"))
-
   length_data <- RODBC::sqlQuery(akfin,
                           paste0("SELECT NORPAC.DEBRIEFED_LENGTH_MV.YEAR,
                                 NORPAC.DEBRIEFED_LENGTH_MV.FMP_AREA,
@@ -151,7 +136,6 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
                           as.is=TRUE, believeNRows=FALSE)
 
   dplyr::bind_cols(length_data, length_haul, length_port) %>%
-    dplyr::filter(YEAR %in% unique(age2$YEAR)) %>%
     write.csv(here::here(year, "data/raw/fishery_size_comp_freq.csv"))
 
   RODBC::odbcClose(akfin)

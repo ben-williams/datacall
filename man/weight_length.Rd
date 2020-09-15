@@ -4,7 +4,7 @@
 \alias{weight_length}
 \title{compute length at age and length sd}
 \usage{
-weight_length(year, admb_home, recage, plus_age)
+weight_length(year, admb_home, rec_age, plus_age)
 }
 \arguments{
 \item{year=}{analysis year}

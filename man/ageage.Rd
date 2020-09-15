@@ -10,7 +10,7 @@ ageage(
   year,
   admb_home = NULL,
   region = "GOA",
-  recage = 2,
+  rec_age = 2,
   plus_age = 45,
   max_age = 100,
   ...
@@ -20,6 +20,16 @@ ageage(
 \item{species}{= "NORK"}
 
 \item{year}{= year of the assessment}
+
+\item{admb_home}{= location admb exists on your computer}
+
+\item{region}{= "GOA" (BSAI not currently setup)}
+
+\item{rec_age}{= recruitment age}
+
+\item{plus_age}{= max age for modeling}
+
+\item{max_age}{= max age for age error analysis - default = 100}
 
 \item{...}{}
 

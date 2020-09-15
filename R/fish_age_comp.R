@@ -1,18 +1,18 @@
 #' Fishery age composition
 #'
 #' @param year
-#' @param recage
+#' @param rec_age
 #' @param plus_age
 #'
 #' @return
 #' @export  fish_age_comp
 #'
 #' @examples
-fish_age_comp <- function(year, recage, plus_age){
+fish_age_comp <- function(year, rec_age, plus_age){
 
 read.csv(here::here(year, "data/raw/fishery_age_comp_data.csv")) %>%
   dplyr::rename_all(tolower) %>%
-  dplyr::filter(specimen_type!=3, !is.na(age), age>=recage) %>%
+  dplyr::filter(specimen_type!=3, !is.na(age), age>=rec_age) %>%
   dplyr::mutate(age = ifelse(age>plus_age, plus_age, age)) %>%
   dplyr::group_by(year) %>%
   dplyr::mutate(tot = dplyr::n()) %>%
@@ -23,7 +23,7 @@ read.csv(here::here(year, "data/raw/fishery_age_comp_data.csv")) %>%
             n_h = mean(n_h),
             age_tot = dplyr::n()) %>%
   dplyr::mutate(prop = age_tot / n_s) %>%
-  dplyr::left_join(expand.grid(year = unique(.$year), age = recage:plus_age), .) %>%
+  dplyr::left_join(expand.grid(year = unique(.$year), age = rec_age:plus_age), .) %>%
   tidyr::replace_na(list(prop = 0)) %>%
   dplyr::group_by(year) %>%
   dplyr::mutate(AA_Index = 1,

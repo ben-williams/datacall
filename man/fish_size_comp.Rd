@@ -4,10 +4,10 @@
 \alias{fish_size_comp}
 \title{Fishery size composition data}
 \usage{
-fish_size_comp(year, recage, lenbins = NULL)
+fish_size_comp(YEAR, rec_age, lenbins = NULL)
 }
 \arguments{
-\item{recage}{}
+\item{rec_age}{}
 }
 \value{
 

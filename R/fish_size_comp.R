@@ -3,23 +3,23 @@
 #'
 #' @param year
 #' @param lenbins
-#' @param recage
+#' @param rec_age
 #'
 #' @return
 #' @export fish_size_comp
 #'
 #' @examples
-fish_size_comp <- function(year, recage, lenbins = NULL){
+fish_size_comp <- function(YEAR, rec_age, lenbins = NULL){
 
     if(is.null(lenbins)){
-      lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
+      lenbins = read.csv(here::here(YEAR, "data/user_input/len_bin_labels.csv"))$len_bins
     } else {
       lenbins = read.csv(lenbins)
     }
 
-  read.csv(here::here(year, "data/raw/fishery_size_comp_data.csv")) %>%
+  read.csv(here::here(year, "data/raw/fishery_age_comp_data.csv")) %>%
     dplyr::rename_all(tolower) %>%
-    dplyr::filter(!is.na(age), age>=recage) %>%
+    dplyr::filter(!is.na(age), age>=rec_age, year>1990 & year<YEAR) %>%
     dplyr::group_by(year) %>%
     dplyr::tally(name = "age")%>%
     dplyr::filter(age>49) %>%
@@ -27,7 +27,7 @@ fish_size_comp <- function(year, recage, lenbins = NULL){
 
   read.csv(here::here(year, "data/raw/fishery_size_comp_freq.csv")) %>%
     dplyr::rename_all(tolower) %>%
-    dplyr::filter(!(year %in% unique(ages$year))) %>%
+    dplyr::filter(!(year %in% unique(ages$year)), year>1990 & year<YEAR) %>%
     dplyr::group_by(year) %>%
     dplyr::mutate(tot = sum(frequency)) %>%
     dplyr::mutate(n_h = length(unique(na.omit(haul_join))) + length(unique(na.omit(port_join)))) %>%

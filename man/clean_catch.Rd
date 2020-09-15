@@ -7,6 +7,14 @@
 clean_catch(year, TAC, old_catch = NULL)
 }
 \arguments{
+\item{year}{\itemize{
+\item year of assessment
+}}
+
+\item{TAC}{\itemize{
+\item last three TAC in form: c(year-3, year-2, year-1)
+}}
+
 \item{old_catch}{\itemize{
 \item if catch is frozen place the file in user_input folder
 }}

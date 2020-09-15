@@ -7,7 +7,7 @@
 #' @export allometric
 #'
 #' @examples
-allometric <- function(year, admb_home, recage, plus_age){
+allometric <- function(year, admb_home, rec_age, plus_age){
 
 
 
@@ -190,7 +190,7 @@ allometric <- function(year, admb_home, recage, plus_age){
   k = as.numeric(sub(".*? ", "", REP[2]))
   t0 = as.numeric(sub(".*? ", "", REP[3]))
 
-  ages_M = recage:plus_age
+  ages_M = rec_age:plus_age
   nages_M = length(ages_M)
   Wbar = Winf * (1 - exp(-k * (ages_M - t0)))^beta_lw
   Wbar[nages_M] = 0.5 * (Wbar[nages_M] + Winf)

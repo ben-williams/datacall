@@ -6,7 +6,7 @@
 #' @export weight_length
 #'
 #' @examples
-weight_length <- function(year, admb_home, recage, plus_age){
+weight_length <- function(year, admb_home, rec_age, plus_age){
 
   if (!dir.exists(here::here(year, "/data/output"))){
     dir.create(here::here(year, "/data/output"), recursive=TRUE)
@@ -18,11 +18,33 @@ weight_length <- function(year, admb_home, recage, plus_age){
     R2admb::setup_admb(admb_home)
   }
 
-  srv_al_key(year) %>%
+  read.csv(here::here(year, "data/raw/srv_saa_age.csv")) %>%
+    dplyr::rename_all(tolower) %>%
+    dplyr::select(year, age, length) %>%
+    dplyr::filter(year>=1990, !is.na(age))  %>%
+    dplyr::select(-year) %>%
+    dplyr::group_by(age) %>%
+    dplyr::filter(dplyr::n()>1) %>%
+    dplyr::group_by(length) %>%
+    dplyr::mutate(n_l = dplyr::n()) %>%
+    dplyr::arrange(age, length) %>%
+    dplyr::group_by(age) %>%
+    dplyr::mutate(sample_size =  dplyr::n()) -> inter
+
+  read.csv(here::here(year, "data/raw/srv_saa_length.csv")) %>%
+    dplyr::rename_all(tolower) %>%
+    dplyr::filter(year>=1990, !is.na(length)) %>%
+    dplyr::select(frequency, length) %>%
+    dplyr::group_by(length) %>%
+    dplyr::summarise(tot = sum(frequency)) %>%
+    dplyr::left_join(inter, .) %>%
+    dplyr::group_by(age, length) %>%
+    dplyr::mutate(prop =  dplyr::n() / n_l * tot) %>%
+    dplyr::distinct() %>%
     dplyr::group_by(age) %>%
     dplyr::summarise(sample_size = mean(sample_size),
-              Lbar = sum(prop * length) / sum(prop) * 0.1,
-              SD_Lbar = sqrt(1 / (sum(prop) - 1) * sum(prop * (length / 10 - Lbar)^2))) %>%
+                     Lbar = sum(prop * length) / sum(prop) * 0.1,
+                     SD_Lbar = sqrt(1 / sum(prop - 1) * sum(prop * (length / 10 - Lbar)^2))) %>%
     dplyr::filter(SD_Lbar>=0.01) -> laa_stats
 
   write.csv(laa_stats, here::here(year, "data/output/laa_stats.csv"))
@@ -50,7 +72,7 @@ weight_length <- function(year, admb_home, recage, plus_age){
 
   # retrieve output
 
-  REP <- readLines("VBL.REP", warn=FALSE)
+  REP = readLines("VBL.REP", warn=FALSE)
   Linf = as.numeric(sub(".*? ", "", REP[1]))
   k = as.numeric(sub(".*? ", "", REP[2]))
   t0 = as.numeric(sub(".*? ", "", REP[3]))
@@ -64,8 +86,6 @@ weight_length <- function(year, admb_home, recage, plus_age){
     nrow(laa_stats),
     "# Ages with observed mean length (ages)",
     paste(laa_stats$age, collapse=" "),
-    "# Observed mean length (Lbar_obs)",
-    paste(laa_stats$Lbar, collapse=" "),
     "# SD in Observed mean length (Lbar_obs)",
     paste(laa_stats$SD_Lbar, collapse=" "),
     "# Sample size vector",
@@ -86,7 +106,7 @@ weight_length <- function(year, admb_home, recage, plus_age){
   # Compute Sz@A transition matrix
   lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
 
-  expand.grid(age = recage:plus_age,
+  expand.grid(age = rec_age:plus_age,
               length = lenbins) %>%
     dplyr::mutate(Lbar = Linf * (1 - exp(-k * (age - t0))),
            Lbar = ifelse(age == plus_age, 0.5 * (Lbar + Linf), Lbar),

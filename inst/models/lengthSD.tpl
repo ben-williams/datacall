@@ -7,7 +7,7 @@ DATA_SECTION
 
 INITIALIZATION_SECTION
 
-  alpha  0.5;
+  alpha  0.005;
   beta   0.5;
 
 PARAMETER_SECTION

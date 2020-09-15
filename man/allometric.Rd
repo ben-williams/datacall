@@ -4,7 +4,7 @@
 \alias{allometric}
 \title{Title}
 \usage{
-allometric(year, admb_home, recage, plus_age)
+allometric(year, admb_home, rec_age, plus_age)
 }
 \arguments{
 \item{year}{}

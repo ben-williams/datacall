@@ -4,7 +4,7 @@
 \alias{survey_age_comp}
 \title{Survey age comp}
 \usage{
-survey_age_comp(year, recage, plus_age)
+survey_age_comp(year, rec_age, plus_age)
 }
 \arguments{
 \item{plus_age}{}

@@ -1,14 +1,14 @@
 #' Survey age comp
 #'
 #' @param year
-#' @param recage
+#' @param rec_age
 #' @param plus_age
 #'
 #' @return
 #' @export survey_age_comp
 #'
 #' @examples
-survey_age_comp <- function(year, recage, plus_age){
+survey_age_comp <- function(year, rec_age, plus_age){
 
   read.csv(here::here(year, "data/raw/srv_age_specimens.csv")) %>%
     dplyr::rename_all(tolower) %>%
@@ -21,7 +21,7 @@ survey_age_comp <- function(year, recage, plus_age){
   read.csv(here::here(year, "data/raw/srv_age_comp.csv")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::rename(year = survey_year) %>%
-    dplyr::filter(age >= recage) %>%
+    dplyr::filter(age >= rec_age) %>%
     dplyr::group_by(year) %>%
     dplyr::mutate(tot = sum(agepop),
                   age = ifelse(age < plus_age, age, plus_age)) %>%
@@ -29,7 +29,7 @@ survey_age_comp <- function(year, recage, plus_age){
     dplyr::summarise(prop = sum(agepop) / mean(tot)) %>%
     dplyr::left_join(dat1) %>%
     dplyr::left_join(expand.grid(year = unique(.$year),
-                                 age = recage:plus_age), .) %>%
+                                 age = rec_age:plus_age), .) %>%
     tidyr::replace_na(list(prop = 0)) %>%
     dplyr::group_by(year) %>%
     dplyr::mutate(AA_Index = 1,
