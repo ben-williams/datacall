@@ -161,7 +161,7 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
   if(species!="DUSK"){
     write.csv(sac, here::here(year, "data/raw/srv_age_comp.csv"))
   } else {
-    dplyr::bind_rows(srv,
+    dplyr::bind_rows(sac,
     RODBC::sqlQuery(afsc,
                     paste0("SELECT GOA.AGECOMP_TOTAL.SURVEY,
           GOA.AGECOMP_TOTAL.SURVEY_YEAR,
