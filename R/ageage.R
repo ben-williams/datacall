@@ -87,24 +87,23 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
     dplyr::mutate(ages_sd = predict(fit, .)) -> fits
 
   ages = fits$age
-  ages_sd = cbind(ages, sds$value[3:(length(ages) + 2)])
 
   mtx100 = matrix(nrow = nrow(fits), ncol = nrow(fits))
-  colnames(mtx100) = rownames(mtx100) = fits$age
+  colnames(mtx100) = rownames(mtx100) = ages
 
   for(j in 1:nrow(fits)){
     mtx100[j,1] = pnorm(ages[1] + 0.5,
                         ages[j],
-                        ages_sd[which(ages_sd[,1] == ages[j]), 2])
+                        fits[which(fits[,1] == ages[j]), 2])
 
 
     for(i in 2:(nrow(fits) - 1)){
       mtx100[j,i] = pnorm(ages[i] + 0.5,
                           ages[j],
-                          ages_sd[which(ages_sd[,1] == ages[j]), 2]) -
+                          fits[which(fits[,1] == ages[j]), 2]) -
         pnorm(ages[i-1] + 0.5,
               ages[j],
-              ages_sd[which(ages_sd[,1] == ages[j]), 2])
+              fits[which(fits[,1] == ages[j]), 2])
 
     }
     mtx100[j,nrow(fits)] = 1 - sum(mtx100[j, 1:(nrow(fits) - 1)])
