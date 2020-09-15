@@ -86,6 +86,9 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
   data.frame(age = rec_age:max_age) %>%
     dplyr::mutate(ages_sd = predict(fit, .)) -> fits
 
+  ages = fits$age
+  ages_sd = cbind(ages, sds$value[3:(length(ages) + 2)])
+
   mtx100 = matrix(nrow = nrow(fits), ncol = nrow(fits))
   colnames(mtx100) = rownames(mtx100) = fits$age
 
