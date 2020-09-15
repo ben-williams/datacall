@@ -1,10 +1,14 @@
 
 #' model function directory and tpl files
 #'
+#' @description creates folders for storing data and output with the top folder being the assessment year
+#'
 #' @return
 #' @export modeldir
 #'
 #' @examples
+#' modeldir(2020)
+#'
 modeldir <- function(year){
 
   if (!dir.exists(here::here(year, "data/output"))){

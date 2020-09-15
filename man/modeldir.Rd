@@ -10,5 +10,9 @@ modeldir(year)
 
 }
 \description{
-model function directory and tpl files
+creates folders for storing data and output with the top folder being the assessment year
+}
+\examples{
+modeldir(2020)
+
 }
