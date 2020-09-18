@@ -21,4 +21,6 @@ Imports:
     funcr,
     Hmisc,
     here,
-    magrittr
+    magrittr,
+    cowplot,
+    ggplot2

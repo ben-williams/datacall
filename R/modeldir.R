@@ -15,6 +15,10 @@ modeldir <- function(year){
     dir.create(here::here(year, "data/output"), recursive=TRUE)
   }
 
+  if (!dir.exists(here::here(year, "data/raw"))){
+    dir.create(here::here(year, "data/raw"), recursive=TRUE)
+  }
+
   if (!dir.exists(here::here(year, "data/user_input"))){
     dir.create(here::here(year, "data/user_input"), recursive=TRUE)
   }

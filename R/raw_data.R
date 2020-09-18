@@ -426,4 +426,11 @@ raw_data <- function(species, year, afsc_user, afsc_pwd, akfin_user, akfin_pwd, 
 
   RODBC::odbcClose(afsc)
 
+
+  txt = "Data were downloaded on:"
+  dt = format(Sys.time(), "%Y-%m-%d")
+
+
+  write.table(c(txt, dt), file = here::here(year, "data/raw/data_called.txt"),
+              sep = "\t", col.names = F, row.names = F)
 }

@@ -48,7 +48,9 @@ concat_dat <- function(rec_age, plus_age, spawn_mo = 5, n_ageage = NULL, n_sizea
   # header ----
   header = c(sep,
              "# GOA Northern Rockfish .dat file for ADMB optimization",
-             paste0 ("# New data provided on, ", substr(Sys.time(), 1, 10)),
+             paste0 ("# New data provided on, ", read.table(c(txt, dt),
+                                                            file = here::here(year, "data/raw/data_called.txt"),
+                                                             sep = "\t")[2,1]),
              "# Notes:",
              "#   ~ Total catch prior to 1992 frozen",
              "#   ~ Total catch from 1993 on uses catch downloaded from AKFIN",
