@@ -7,7 +7,7 @@
 #' @export allometric
 #'
 #' @examples
-allometric <- function(year, admb_home, rec_age, plus_age){
+allometric <- function(year, admb_home = NULL, rec_age, plus_age){
 
 
 
