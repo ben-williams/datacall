@@ -14,8 +14,9 @@ survey_biomass <- function(year, file = NULL){
 
   read.csv(here::here(year, "data/raw/srv_biomass.csv")) %>%
     dplyr::rename_all(tolower) %>%
-    dplyr::summarise(biomass = total_biomass,
-                     se = sqrt(biomass_var),
+      dplyr::group_by(year) %>%
+    dplyr::summarise(biomass = round(total_biomass),
+                     se = round(sqrt(biomass_var)),
                      lci = biomass - 1.96 * se,
                      uci = biomass + 1.96 * se) %>%
     dplyr::mutate(lci = ifelse(lci < 0, 0, lci)) -> sb
