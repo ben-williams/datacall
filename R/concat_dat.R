@@ -1,16 +1,18 @@
-#' Title
+#' Concatenate a .dat file
 #'
-#' @param rec_age
-#' @param plus_age
-#' @param spawn_mo
-#' @param n_ageage
-#' @param n_sizeage
+#' @param year assessment year
+#' @param model folder that the .tpl will be in
+#' @param rec_age recruitment age
+#' @param plus_age plus age group
+#' @param spawn_mo spawning month
+#' @param n_ageagenumber of age error transmission matrices
+#' @param n_sizeage # of size at age transmission matrices
 #'
 #' @return
-#' @export
+#' @export concat_dat
 #'
 #' @examples
-concat_dat <- function(rec_age, plus_age, spawn_mo = 5, n_ageage = NULL, n_sizeage = NULL){
+concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = NULL, n_sizeage = NULL){
 
   catch = read.csv(here::here(year, "data/output/catch.csv"))
   ssc = read.csv(here::here(year, "data/output/survey_size_comp.csv"))
@@ -298,6 +300,6 @@ concat_dat <- function(rec_age, plus_age, spawn_mo = 5, n_ageage = NULL, n_sizea
            eof)
 
 
-  write.table(dat, file = here::here(year, "base", paste0("goa_nr_", year, ".dat")) ,
+  write.table(dat, file = here::here(year, model, paste0("goa_nr_", year, ".dat")) ,
               quote=FALSE, row.names=FALSE, col.names=FALSE)
 }

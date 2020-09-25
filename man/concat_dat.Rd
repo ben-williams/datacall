@@ -2,16 +2,36 @@
 % Please edit documentation in R/concat_dat.R
 \name{concat_dat}
 \alias{concat_dat}
-\title{Title}
+\title{Concatenate a .dat file}
 \usage{
-concat_dat(rec_age, plus_age, spawn_mo = 5, n_ageage = NULL, n_sizeage = NULL)
+concat_dat(
+  year,
+  model,
+  rec_age,
+  plus_age,
+  spawn_mo = 5,
+  n_ageage = NULL,
+  n_sizeage = NULL
+)
 }
 \arguments{
-\item{n_sizeage}{}
+\item{year}{assessment year}
+
+\item{model}{folder that the .tpl will be in}
+
+\item{rec_age}{recruitment age}
+
+\item{plus_age}{plus age group}
+
+\item{spawn_mo}{spawning month}
+
+\item{n_sizeage}{of size at age transmission matrices}
+
+\item{n_ageagenumber}{of age error transmission matrices}
 }
 \value{
 
 }
 \description{
-Title
+Concatenate a .dat file
 }
