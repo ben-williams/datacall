@@ -10,7 +10,9 @@
 #' @examples
 fish_age_comp <- function(year, rec_age, plus_age){
 
-read.csv(here::here(year, "data/raw/fishery_age_comp_data.csv")) %>%
+read.csv(here::here(year, "data/raw/fishery_age_comp_data.csv"),
+         colClasses = c(HAUL_JOIN = "character",
+                        PORT_JOIN = "character")) %>%
   dplyr::rename_all(tolower) %>%
   dplyr::filter(specimen_type!=3, !is.na(age), age>=rec_age) %>%
   dplyr::mutate(age = ifelse(age>plus_age, plus_age, age)) %>%

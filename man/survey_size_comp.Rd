@@ -9,7 +9,7 @@ survey_size_comp(year, lenbins = NULL)
 \arguments{
 \item{year}{= the year of assessment}
 
-\item{lenbins}{}
+\item{lenbins}{= length bin file}
 }
 \value{
 

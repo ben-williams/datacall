@@ -1,12 +1,16 @@
-#' compute length at age and length sd
+#' compute size at age (length at age and length sd)
 #'
 #' @param year= analysis year
-#'
+#' @param admb_home = location admb exists on your computer
+#' @param rec_age = recruitment age
+#' @param plus_age = max age for modeling
+#' @param max_age = max age for age error analysis - default = 100
+#' @param lenbins = length bin file
 #' @return
-#' @export weight_length
+#' @export size_at_age
 #'
 #' @examples
-weight_length <- function(year, admb_home, rec_age, plus_age){
+size_at_age<- function(year, admb_home, rec_age, plus_age, lenbins = NULL){
 
   if (!dir.exists(here::here(year, "/data/output"))){
     dir.create(here::here(year, "/data/output"), recursive=TRUE)
@@ -16,6 +20,12 @@ weight_length <- function(year, admb_home, rec_age, plus_age){
     R2admb::setup_admb()
   } else {
     R2admb::setup_admb(admb_home)
+  }
+
+  if(is.null(lenbins)){
+    lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
+  } else {
+    lenbins = read.csv(lenbins)
   }
 
   read.csv(here::here(year, "data/raw/srv_saa_age.csv")) %>%
@@ -44,10 +54,10 @@ weight_length <- function(year, admb_home, rec_age, plus_age){
     dplyr::group_by(age) %>%
     dplyr::summarise(sample_size = mean(sample_size),
                      Lbar = sum(prop * length) / sum(prop) * 0.1,
-                     SD_Lbar = sqrt(1 / sum(prop - 1) * sum(prop * (length / 10 - Lbar)^2))) %>%
+                     SD_Lbar = sqrt(1 / (sum(prop) - 1) * sum(prop * (length / 10 - Lbar)^2))) %>%
     dplyr::filter(SD_Lbar>=0.01) -> laa_stats
 
-  write.csv(laa_stats, here::here(year, "data/output/laa_stats.csv"))
+  write.csv(laa_stats, here::here(year, "data/output/laa_stats.csv"), row.names = FALSE)
 
   laa_stats
 
@@ -100,26 +110,27 @@ weight_length <- function(year, admb_home, rec_age, plus_age){
   b <- STD$value[2]
   (params <- cbind(Linf, k, t0, a, b))
 
-  write.csv(params, here::here(year, "data/output/lbar_params.csv"))
+  write.csv(params, here::here(year, "data/output/lbar_params.csv"), row.names = FALSE)
 
 
   # Compute Sz@A transition matrix
-  lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
 
   expand.grid(age = rec_age:plus_age,
               length = lenbins) %>%
     dplyr::mutate(Lbar = Linf * (1 - exp(-k * (age - t0))),
-           Lbar = ifelse(age == plus_age, 0.5 * (Lbar + Linf), Lbar),
-           SD_Lbar = a * log(age) + b,
-           prob = ifelse(length == min(length),
-                         pnorm(length + 0.5, Lbar, SD_Lbar),
-                         pnorm(length + 0.5, Lbar, SD_Lbar) -
-                           pnorm(length -0.5, Lbar, SD_Lbar)),
-           prob = round(prob, digits = 4)) %>%
+                  Lbar = ifelse(age == plus_age, 0.5 * (Lbar + Linf), Lbar),
+                  SD_Lbar = a * log(age) + b,
+                  prob = ifelse(length == min(length),
+                                pnorm(length + 0.5, Lbar, SD_Lbar),
+                                pnorm(length + 0.5, Lbar, SD_Lbar) -
+                                  pnorm(length -0.5, Lbar, SD_Lbar)),
+                  prob = round(prob, digits = 4)) %>%
     dplyr::select(age, length, prob) %>%
-    tidyr::pivot_wider(names_from = length, values_from = prob) -> saa
+    tidyr::pivot_wider(names_from = length, values_from = prob) %>%
+    dplyr::mutate(!!rev(names(.))[1] := 1 - rowSums(.[2:(ncol(.) - 1)])) %>%
+    dplyr::mutate_at(2:ncol(.), round, 4) -> saa
 
-    write.csv(saa, here::here(year, "data/output/SaA.csv"))
-    saa
+  write.csv(saa, here::here(year, "data/output/saa.csv"), row.names = FALSE)
+  saa
 
 }

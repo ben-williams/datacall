@@ -1,7 +1,7 @@
 #' Survey size composition
 #'
 #' @param year  = the year of assessment
-#' @param lenbins
+#' @param lenbins = length bin file
 #'
 #' @return
 #' @export survey_size_comp

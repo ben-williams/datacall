@@ -25,12 +25,15 @@ fish_size_comp <- function(YEAR, rec_age, lenbins = NULL){
     dplyr::filter(age>49) %>%
     dplyr::ungroup() -> ages
 
-  read.csv(here::here(year, "data/raw/fishery_size_comp_freq.csv")) %>%
+read.csv(here::here(year, "data/raw/fishery_size_comp_freq.csv"),
+         colClasses = c(HAUL_JOIN = "character",
+                        PORT_JOIN = "character")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::filter(!(year %in% unique(ages$year)), year>1990 & year<YEAR) %>%
     dplyr::group_by(year) %>%
-    dplyr::mutate(tot = sum(frequency)) %>%
-    dplyr::mutate(n_h = length(unique(na.omit(haul_join))) + length(unique(na.omit(port_join)))) %>%
+    dplyr::mutate(tot = sum(frequency),
+                  length = ifelse(length >= max(lenbins), max(lenbins), length),
+                  n_h = length(unique(na.omit(haul_join))) + length(unique(na.omit(port_join)))) %>%
     dplyr::group_by(year, length) %>%
     dplyr::summarise(n_s = mean(tot),
               n_h = mean(n_h),

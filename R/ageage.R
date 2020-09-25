@@ -109,8 +109,8 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
     mtx100[j,nrow(fits)] = 1 - sum(mtx100[j, 1:(nrow(fits) - 1)])
   }
 
-  write.csv(mtx100, here::here(paste0(year, "/data/output/ae_mtx_", max_age, ".csv")))
-  write.csv(fits,  here::here(year, "data/output/ae_SD.csv"))
+  write.csv(mtx100, here::here(paste0(year, "/data/output/ae_mtx_", max_age, ".csv")), row.names = FALSE)
+  write.csv(fits,  here::here(year, "data/output/ae_SD.csv"), row.names = FALSE)
 
   # Compute ageing error matrix for model
   ae_Mdl <- matrix(nrow=length(ages), ncol=nages)
@@ -120,7 +120,7 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
   r <- which(ae_Mdl[, nages]>=0.999)[1]
   ae_Mdl <- ae_Mdl[1:r,]
 
-  write.csv(ae_Mdl,  here::here(year, "data/output/ae_model.csv"))
+  write.csv(ae_Mdl,  here::here(year, "data/output/ae_model.csv"), row.names = FALSE)
   ae_Mdl
 
 }
