@@ -33,8 +33,8 @@ concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = 
   lbin = lbin[!is.na(lbin)]
   nlenbins = length(lbin)
 
-  if (!dir.exists(here::here(year, "base"))){
-    dir.create(here::here(year, "base"), recursive=TRUE)
+  if (!dir.exists(here::here(year, model))){
+    dir.create(here::here(year, model), recursive=TRUE)
   }
 
   if(is.null(n_ageage)){
