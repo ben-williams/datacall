@@ -2,17 +2,25 @@
 #'
 #' @param year  assessment year
 #' @param model   model being evaluated (folder name)
-#' @param model_name   name of the model e.g., goa_nr_2020
+#' @param model_name   name of the model e.g., updated_nr
+#' @param data_name name of dat file e.g., goa_nr_2020
+#' @param rec_age recruitment age
+#' @param plus_age plus age group
+#' @param ... future functions
 #'
 #' @return
 #' @export process_results
 #'
 #' @examples
-process_results <- function(year, model, model_name, rec_age, plus_age, lenbins = NULL, ...){
+process_results <- function(year, model, model_name, data_name, rec_age, plus_age, mcmc, mcsave, ...){
 
   # setup
   if (!dir.exists(here::here(year, model, "processed"))){
     dir.create(here::here(year, model, "processed"), recursive=TRUE)
+  }
+
+  if (!dir.exists(here::here(year, model, "figs"))){
+    dir.create(here::here(year, model, "figs"), recursive=TRUE)
   }
 
 
@@ -30,7 +38,7 @@ process_results <- function(year, model, model_name, rec_age, plus_age, lenbins 
 
   # read in rep and ctl files
   REP <- readLines(here::here(year, model, paste0(model_name, ".rep")))
-  CTL <- readLines(here::here(year, model, paste0(model_name, ".ctl")))
+  CTL <- readLines(here::here(year, model, paste0(data_name, ".ctl")))
   PSV <- file(here::here(year, model, paste0(model_name, ".psv")), "rb")
   STD <- read.delim(here::here(year, model, paste0(model_name, ".std")), sep="", header = TRUE)
   mceval <- read.delim(here::here(year, model, "evalout.prj"), sep="", header=FALSE)
@@ -56,7 +64,7 @@ process_results <- function(year, model, model_name, rec_age, plus_age, lenbins 
   # MCMC parameters ----
 
   npar = readBin(PSV, what = integer(), n=1)
-  mcmc = readBin(PSV, what = numeric(), n = (npar * 5000))
+  mcmc = readBin(PSV, what = numeric(), n = (npar * mcmc / mcsave))
   close(PSV)
   mcmc_params = matrix(mcmc, byrow=TRUE, ncol=npar)
   mcmc_params = mcmc_params[501:nrow(mcmc_params),]
@@ -66,7 +74,7 @@ process_results <- function(year, model, model_name, rec_age, plus_age, lenbins 
   # mceval phase output ----
 
   #Curry's Change
-  mceval = mceval[501:nrow(mcmc_params),]
+  mceval = mceval[501:nrow(mceval),]
 
   #Length colnames = 286
   # columns mcmc_other = 271

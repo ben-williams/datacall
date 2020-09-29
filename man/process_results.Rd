@@ -8,9 +8,11 @@ process_results(
   year,
   model,
   model_name,
+  data_name,
   rec_age,
   plus_age,
-  lenbins = NULL,
+  mcmc,
+  mcsave,
   ...
 )
 }
@@ -19,7 +21,15 @@ process_results(
 
 \item{model}{model being evaluated (folder name)}
 
-\item{model_name}{name of the model e.g., goa_nr_2020}
+\item{model_name}{name of the model e.g., updated_nr}
+
+\item{data_name}{name of dat file e.g., goa_nr_2020}
+
+\item{rec_age}{recruitment age}
+
+\item{plus_age}{plus age group}
+
+\item{...}{future functions}
 }
 \value{
 

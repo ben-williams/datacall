@@ -5,13 +5,14 @@
 #' @param rec_age recruitment age
 #' @param plus_age plus age group
 #' @param spawn_mo spawning month
-#' @param n_ageagenumber of age error transmission matrices
-#' @param n_sizeage # of size at age transmission matrices
+#' @param n_ageagenumber of age error transmission matrices default is 1
+#' @param n_sizeage # of size at age transmission matrices default is 1
 #'
 #' @return
 #' @export concat_dat
 #'
-#' @examples
+#' @examples concat_dat(year = 2020, model = "base", rec_age = 2, plus_age = 45)
+#'
 concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = NULL, n_sizeage = NULL){
 
   catch = read.csv(here::here(year, "data/output/catch.csv"))

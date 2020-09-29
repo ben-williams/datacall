@@ -14,7 +14,7 @@ plot_survey <- function(year, model){
   }
 
   read.csv(here::here(year, model, "processed/survey.csv")) %>%
-    dplyr::select(-X, Observed = biom, Predicted = pred) %>%
+    dplyr::select(-X, Observed = biomass, Predicted = pred) %>%
     tidyr::pivot_longer(-c(year, se, uci, lci)) %>%
     dplyr::mutate(value = value / 1000,
                   uci = uci / 1000,

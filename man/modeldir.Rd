@@ -6,6 +6,9 @@
 \usage{
 modeldir(year)
 }
+\arguments{
+\item{year}{assessment year}
+}
 \value{
 
 }

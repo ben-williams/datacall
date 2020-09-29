@@ -3,6 +3,8 @@
 #'
 #' @description creates folders for storing data and output with the top folder being the assessment year
 #'
+#' @param year assessment year
+#'
 #' @return
 #' @export modeldir
 #'

@@ -12,9 +12,10 @@
 #' @param ...
 #'
 #' @return
-#' @export
+#' @export ageage
 #'
-#' @examples
+#' @examples ageage(species = "NORK", year = 2020, admb_home = NULL, region = "GOA", rec_age = 2, plus_age = 45, max_age = 100, ...)
+#'
 ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region = "GOA", rec_age = 2, plus_age = 45, max_age = 100, ...){
 
 

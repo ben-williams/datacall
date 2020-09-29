@@ -25,13 +25,17 @@ concat_dat(
 
 \item{spawn_mo}{spawning month}
 
-\item{n_sizeage}{of size at age transmission matrices}
+\item{n_sizeage}{of size at age transmission matrices default is 1}
 
-\item{n_ageagenumber}{of age error transmission matrices}
+\item{n_ageagenumber}{of age error transmission matrices default is 1}
 }
 \value{
 
 }
 \description{
 Concatenate a .dat file
+}
+\examples{
+concat_dat(year = 2020, model = "base", rec_age = 2, plus_age = 45)
+
 }

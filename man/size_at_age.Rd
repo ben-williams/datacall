@@ -4,18 +4,18 @@
 \alias{size_at_age}
 \title{compute size at age (length at age and length sd)}
 \usage{
-size_at_age(year, admb_home, rec_age, plus_age, lenbins = NULL)
+size_at_age(year, admb_home, lenbins = NULL)
 }
 \arguments{
 \item{admb_home}{= location admb exists on your computer}
 
-\item{rec_age}{= recruitment age}
-
-\item{plus_age}{= max age for modeling}
-
 \item{lenbins}{= length bin file}
 
 \item{year=}{analysis year}
+
+\item{rec_age}{= recruitment age}
+
+\item{plus_age}{= max age for modeling}
 
 \item{max_age}{= max age for age error analysis - default = 100}
 }

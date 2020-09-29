@@ -10,7 +10,7 @@
 #' @export size_at_age
 #'
 #' @examples
-size_at_age<- function(year, admb_home, rec_age, plus_age, lenbins = NULL){
+size_at_age<- function(year, admb_home, lenbins = NULL){
 
   if (!dir.exists(here::here(year, "/data/output"))){
     dir.create(here::here(year, "/data/output"), recursive=TRUE)
@@ -20,6 +20,13 @@ size_at_age<- function(year, admb_home, rec_age, plus_age, lenbins = NULL){
     R2admb::setup_admb()
   } else {
     R2admb::setup_admb(admb_home)
+  }
+
+  if (!file.exists(here::here(year,"data/output/ae_model.csv"))){
+    stop("You must first run the age-error function 'ageage()")
+  } else {
+    nages_m = nrow(read.csv(here::here(year, "data/output/ae_model.csv")))
+    ages_m = rec_age:(rec_age + nages_m - 1)
   }
 
   if(is.null(lenbins)){
@@ -115,10 +122,10 @@ size_at_age<- function(year, admb_home, rec_age, plus_age, lenbins = NULL){
 
   # Compute Sz@A transition matrix
 
-  expand.grid(age = rec_age:plus_age,
+  expand.grid(age = ages_m,
               length = lenbins) %>%
     dplyr::mutate(Lbar = Linf * (1 - exp(-k * (age - t0))),
-                  Lbar = ifelse(age == plus_age, 0.5 * (Lbar + Linf), Lbar),
+                  Lbar = ifelse(age == max(ages_m), 0.5 * (Lbar + Linf), Lbar),
                   SD_Lbar = a * log(age) + b,
                   prob = ifelse(length == min(length),
                                 pnorm(length + 0.5, Lbar, SD_Lbar),

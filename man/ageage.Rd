@@ -41,3 +41,7 @@ ageage(
 \description{
 Title
 }
+\examples{
+ageage(species = "NORK", year = 2020, admb_home = NULL, region = "GOA", rec_age = 2, plus_age = 45, max_age = 100, ...)
+
+}

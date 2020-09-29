@@ -4,7 +4,7 @@
 \alias{weight_at_age}
 \title{estimate allometrci relationship and weight-at-age}
 \usage{
-weight_at_age(year, admb_home, rec_age, plus_age)
+weight_at_age(year, admb_home, rec_age)
 }
 \arguments{
 \item{year}{model year}
