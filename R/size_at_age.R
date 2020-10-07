@@ -3,14 +3,13 @@
 #' @param year= analysis year
 #' @param admb_home = location admb exists on your computer
 #' @param rec_age = recruitment age
-#' @param plus_age = max age for modeling
 #' @param max_age = max age for age error analysis - default = 100
 #' @param lenbins = length bin file
 #' @return
 #' @export size_at_age
 #'
 #' @examples
-size_at_age<- function(year, admb_home, lenbins = NULL){
+size_at_age<- function(year, admb_home, rec_age, lenbins = NULL){
 
   if (!dir.exists(here::here(year, "/data/output"))){
     dir.create(here::here(year, "/data/output"), recursive=TRUE)

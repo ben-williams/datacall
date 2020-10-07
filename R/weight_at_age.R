@@ -1,10 +1,8 @@
-#' estimate allometrci relationship and weight-at-age
+#' estimate allometric relationship and weight-at-age
 #'
 #' @param year model year
 #' @param admb_home = location admb exists on your computer
 #' @param rec_age recruitment age
-#' @param plus_age plus age group
-#'
 #' @return
 #' @export weight_at_age
 #'
@@ -268,8 +266,8 @@ weight_at_age <- function(year, admb_home, rec_age){
   Wbar = round(Wbar, digits=1)
   Wbar_params = cbind(Winf, k, t0, beta_lw)
 
-  write.csv(Wbar_params, here::here(year, "data/output/Wbar_params.csv"))
-  write.csv(Wbar, here::here(year, "data/output/waa.csv"))
+  write.csv(Wbar_params, here::here(year, "data/output/Wbar_params.csv"), row.names = FALSE)
+  write.csv(Wbar, here::here(year, "data/output/waa.csv"), row.names = FALSE)
 
   Wbar}
 

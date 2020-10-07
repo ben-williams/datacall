@@ -64,7 +64,7 @@ survey_size_comp(year)
 size_at_age(year, admb_home, rec_age, plus_age)
 weight_at_age(year, admb_home, rec_age, plus_age)
 ageage(reader_tester = NULL, species, year, admb_home) # read_tester file is provide in the "user_input" folder
-weight_length(year, admb_home, rec_age, plus_age)
+
 ```
 
 A .dat file will be placed in the model folder (users choice)

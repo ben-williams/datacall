@@ -25,7 +25,7 @@ survey_biomass <- function(year, file = NULL){
       read.csv(here::here(year, "data/user_input", file)) -> sb
     }
 
-  write.csv(sb, here::here(year, "data/output/survey_biomass.csv"))
+  write.csv(sb, here::here(year, "data/output/survey_biomass.csv"), row.names = FALSE)
 
   sb
 }

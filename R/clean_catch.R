@@ -41,7 +41,7 @@ clean_catch <- function(year, TAC, old_catch = NULL){
     dplyr::bind_rows(old_catch) %>%
     dplyr::arrange(Year) %>%
     dplyr::mutate(Catch = ifelse(Year==year, round(Catch * ratio), Catch)) -> catch
-  write.csv(catch, here::here(year, "data/output/catch.csv"))
+  write.csv(catch, here::here(year, "data/output/catch.csv"), row.names = FALSE)
 
   # estimate yield ratio of previous 3 years relative to TAC
   catch %>%
@@ -49,5 +49,5 @@ clean_catch <- function(year, TAC, old_catch = NULL){
     dplyr::bind_cols(tac = TAC) %>%
     dplyr::mutate(yld = Catch / tac) %>%
     dplyr::summarise(yld = mean(yld)) %>%
-    write.csv(here::here(year, "data/output/yld_rat.csv"))
+    write.csv(here::here(year, "data/output/yld_rat.csv"), row.names = FALSE)
 }

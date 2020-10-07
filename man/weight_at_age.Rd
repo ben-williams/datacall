@@ -2,7 +2,7 @@
 % Please edit documentation in R/weight_at_age.R
 \name{weight_at_age}
 \alias{weight_at_age}
-\title{estimate allometrci relationship and weight-at-age}
+\title{estimate allometric relationship and weight-at-age}
 \usage{
 weight_at_age(year, admb_home, rec_age)
 }
@@ -12,12 +12,10 @@ weight_at_age(year, admb_home, rec_age)
 \item{admb_home}{= location admb exists on your computer}
 
 \item{rec_age}{recruitment age}
-
-\item{plus_age}{plus age group}
 }
 \value{
 
 }
 \description{
-estimate allometrci relationship and weight-at-age
+estimate allometric relationship and weight-at-age
 }

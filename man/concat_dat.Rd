@@ -11,7 +11,8 @@ concat_dat(
   plus_age,
   spawn_mo = 5,
   n_ageage = NULL,
-  n_sizeage = NULL
+  n_sizeage = NULL,
+  lenbins = NULL
 )
 }
 \arguments{

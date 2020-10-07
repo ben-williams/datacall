@@ -13,7 +13,13 @@
 #'
 #' @examples concat_dat(year = 2020, model = "base", rec_age = 2, plus_age = 45)
 #'
-concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = NULL, n_sizeage = NULL){
+concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = NULL, n_sizeage = NULL, lenbins = NULL){
+
+  if(is.null(lenbins)){
+    lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
+  } else {
+    lenbins = read.csv(lenbins)$len_bins
+  }
 
   catch = read.csv(here::here(year, "data/output/catch.csv"))
   ssc = read.csv(here::here(year, "data/output/survey_size_comp.csv"))
@@ -25,7 +31,7 @@ concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = 
   srvac = read.csv(here::here(year, "data/output/survey_age_comp.csv"))
   tssc = read.csv(here::here(year, "data/output/survey_size_comp.csv"))
   tsb = read.csv(here::here(year, "data/output/survey_biomass.csv"))
-  lenbins = length(read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins)
+  names(tsb) <- c("year", "biomass", "se", "lci", "uci")
   m_nages = nrow(ae)
   nages = length(rec_age:plus_age)
 

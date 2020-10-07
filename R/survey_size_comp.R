@@ -12,7 +12,7 @@ survey_size_comp <- function(year, lenbins = NULL){
   if(is.null(lenbins)){
     lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
   } else {
-    lenbins = read.csv(lenbins)
+    lenbins = read.csv(lenbins)$len_bins
   }
 
   read.csv(here::here(year, "data/raw/srv_size_freq.csv")) %>%
