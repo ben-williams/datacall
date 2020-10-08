@@ -10,12 +10,12 @@
 survey_size_comp <- function(year, lenbins = NULL){
 
   if(is.null(lenbins)){
-    lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
+    lenbins = read.csv(here::here(year, "data", "user_input", "len_bin_labels.csv"))$len_bins
   } else {
-    lenbins = read.csv(lenbins)$len_bins
+    lenbins = read.csv(here::here(year, "data", "user_input", lenbins))$len_bins
   }
 
-  read.csv(here::here(year, "data/raw/srv_size_freq.csv")) %>%
+  read.csv(here::here(year, "data", "raw", "srv_size_freq.csv")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::filter(!is.na(length)) %>%
     dplyr::mutate(length = length / 10) %>%
@@ -25,7 +25,7 @@ survey_size_comp <- function(year, lenbins = NULL){
     dplyr::ungroup() -> dat
 
 
-  read.csv(here::here(year, "data/raw/srv_size_comp.csv")) %>%
+  read.csv(here::here(year, "data", "raw", "srv_size_comp.csv")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::mutate(length = length / 10,
                   length = ifelse(length >= max(lenbins), max(lenbins), length)) %>%
@@ -44,7 +44,7 @@ survey_size_comp <- function(year, lenbins = NULL){
                   n_h = mean(n_h, na.rm = T)) %>%
     tidyr::pivot_wider(names_from = length, values_from = prop) -> size_comp
 
-  readr::write_csv(size_comp, here::here(year, "data/output/survey_size_comp.csv"))
+  readr::write_csv(size_comp, here::here(year, "data", "output", "survey_size_comp.csv"))
 
   size_comp
 }

@@ -14,10 +14,10 @@ plot_rec <- function(year, model){
     stop("must run 'process_results' before creating figures")
   }
 
-  read.csv(here::here(year, model, "processed/ages_yrs.csv"))$yrs -> yrs
-  read.csv(here::here(year, model, "processed/bio_rec_f.csv")) %>%
+  read.csv(here::here(year, model, "processed", "ages_yrs.csv"))$yrs -> yrs
+  read.csv(here::here(year, model, "processed", "bio_rec_f.csv")) %>%
   dplyr::select(recruits) %>%
-  dplyr::bind_cols(read.csv(here::here(year, model, "processed/mceval.csv")) %>%
+  dplyr::bind_cols(read.csv(here::here(year, model, "processed", "mceval.csv")) %>%
                      dplyr::select(log_mean_rec, paste0("log_rec_dev_", yrs)) %>%
                      dplyr::mutate(group = 1:dplyr::n()) %>%
                      tidyr::pivot_longer(c(-group, -log_mean_rec), values_to = "rec_dev") %>%
@@ -37,5 +37,5 @@ dat %>%
   ggplot2::ylab("Age-2 Recruitment (millions)") +
   funcr::theme_report()
 
-ggplot2::ggsave(here::here(year, model, "figs/recruits.png"), width = 6.5, height = 5.5, units = "in", dpi = 200)
+ggplot2::ggsave(here::here(year, model, "figs", "recruits.png"), width = 6.5, height = 5.5, units = "in", dpi = 200)
 }

@@ -10,7 +10,7 @@
 #' @examples
 survey_age_comp <- function(year, rec_age, plus_age){
 
-  read.csv(here::here(year, "data/raw/srv_age_specimens.csv")) %>%
+  read.csv(here::here(year, "data", "raw", "srv_age_specimens.csv")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::filter(!is.na(age)) %>%
     dplyr::group_by(year) %>%
@@ -18,7 +18,7 @@ survey_age_comp <- function(year, rec_age, plus_age){
                      n_h = length(unique(hauljoin))) -> dat1
 
 
-  read.csv(here::here(year, "data/raw/srv_age_comp.csv")) %>%
+  read.csv(here::here(year, "data", "raw", "srv_age_comp.csv")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::rename(year = survey_year) %>%
     dplyr::filter(age >= rec_age) %>%
@@ -38,7 +38,7 @@ survey_age_comp <- function(year, rec_age, plus_age){
     tidyr::pivot_wider(names_from = age, values_from = prop) %>%
     dplyr::arrange(year) -> age_comp
 
-  readr::write_csv(age_comp, here::here(year, "data/output/survey_age_comp.csv"))
+  readr::write_csv(age_comp, here::here(year, "data", "output", "survey_age_comp.csv"))
 
   age_comp
 

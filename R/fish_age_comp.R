@@ -10,7 +10,7 @@
 #' @examples
 fish_age_comp <- function(year, rec_age, plus_age){
 
-read.csv(here::here(year, "data/raw/fishery_age_comp_data.csv"),
+read.csv(here::here(year, "data", "raw", "fishery_age_comp_data.csv"),
          colClasses = c(HAUL_JOIN = "character",
                         PORT_JOIN = "character")) %>%
   dplyr::rename_all(tolower) %>%
@@ -34,7 +34,7 @@ read.csv(here::here(year, "data/raw/fishery_age_comp_data.csv"),
   dplyr::select(-age_tot) %>%
   tidyr::pivot_wider(names_from = age, values_from = prop) -> fish_age_comp
 
-  readr::write_csv(fish_age_comp, here::here(year, "data/output/fish_age_comp.csv"))
+  readr::write_csv(fish_age_comp, here::here(year, "data", "output", "fish_age_comp.csv"))
 
   fish_age_comp
 

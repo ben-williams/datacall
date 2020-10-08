@@ -13,8 +13,8 @@ plot_catch <- function(year, model){
     stop("must run 'process_results' before creating figures")
   }
 
-  read.csv(here::here(year, model, "processed/ages_yrs.csv"))$yrs -> yrs
-  read.csv(here::here(year, model, "processed/catch.csv")) %>%
+  read.csv(here::here(year, model, "processed", "ages_yrs.csv"))$yrs -> yrs
+  read.csv(here::here(year, model, "processed", "catch.csv")) %>%
     dplyr::bind_cols(year = yrs) %>%
     dplyr::group_by(year) %>%
     dplyr::summarise(Observed = obs / 1000,
@@ -39,7 +39,7 @@ plot_catch <- function(year, model){
     ggplot2::theme(legend.justification=c(1,0),
                    legend.position=c(0.98,0.8))
 
-  ggplot2::ggsave(here::here(year, model, "figs/catch.png"),
+  ggplot2::ggsave(here::here(year, model, "figs", "catch.png"),
          width = 6.5, height = 6.5, units = "in", dpi = 200)
 
 }

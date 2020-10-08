@@ -18,10 +18,10 @@ plot_swath <- function(year, model){
   ggplot2::theme_set(funcr::theme_report())
 
   # read in data
-  read.csv(here::here(year, model, "processed/ages_yrs.csv"))$yrs -> yrs
-  read.csv(here::here(year, model, "processed/b35_b40_yld.csv")) -> bby
+  read.csv(here::here(year, model, "processed", "ages_yrs.csv"))$yrs -> yrs
+  read.csv(here::here(year, model, "processed", "b35_b40_yld.csv")) -> bby
 
-  read.csv(here::here(year, model, "processed/mceval.csv")) %>%
+  read.csv(here::here(year, model, "processed", "mceval.csv")) %>%
     dplyr::select(paste0("spawn_biom_", yrs),
                   paste0("spawn_biom_proj_", (max(yrs)+1):(max(yrs+15)))) %>%
     dplyr::mutate(group = 1:dplyr::n()) %>%
@@ -36,10 +36,14 @@ plot_swath <- function(year, model){
 
   dat %>%
     ggplot2::ggplot(ggplot2::aes(year, median)) +
-    ggplot2::geom_ribbon(data = dplyr::filter(dat, year<=2020), ggplot2::aes(ymin = lci, ymax = uci), alpha = 0.3) +
-    ggplot2::geom_ribbon(data = dplyr::filter(dat, year>=2020), ggplot2::aes(ymin = lci, ymax = uci), alpha = 0.2) +
-    ggplot2::geom_line(data = dplyr::filter(dat, year<=2020), ggplot2::aes(year, median)) +
-    ggplot2::geom_line(data = dplyr::filter(dat, year>=2020), ggplot2::aes(year, median), lty = 2) +
+    ggplot2::geom_ribbon(data = dplyr::filter(dat, year<=2020),
+                         ggplot2::aes(ymin = lci, ymax = uci), alpha = 0.3) +
+    ggplot2::geom_ribbon(data = dplyr::filter(dat, year>=2020),
+                         ggplot2::aes(ymin = lci, ymax = uci), alpha = 0.2) +
+    ggplot2::geom_line(data = dplyr::filter(dat, year<=2020),
+                       ggplot2::aes(year, median)) +
+    ggplot2::geom_line(data = dplyr::filter(dat, year>=2020),
+                       ggplot2::aes(year, median), lty = 2) +
     ggplot2::geom_hline(yintercept = c(bby$B40/1000, bby$B35/1000),
                         lty = c(3, 1), color = c(2, 1)) +
     ggplot2::scale_x_continuous(breaks = funcr::tickr(dat, year, 10, start = 1960)$breaks,
@@ -49,5 +53,5 @@ plot_swath <- function(year, model){
     ggplot2::expand_limits(y = 0) +
     ggplot2::theme(legend.position = "none")
 
-  ggplot2::ggsave(here::here(year, model, "figs/swath.png"), width = 6.5, height = 5.5, units = "in", dpi = 200)
+  ggplot2::ggsave(here::here(year, model, "figs", "swath.png"), width = 6.5, height = 5.5, units = "in", dpi = 200)
 }

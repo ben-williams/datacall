@@ -14,7 +14,7 @@ plot_selex <- function(year, model){
   }
 
 
-  read.csv(here::here(year, model, "processed/selex.csv")) %>%
+  read.csv(here::here(year, model, "processed", "selex.csv")) %>%
     dplyr::select(-X, Fishery = fish, Survey = srv1) -> dat
 
   dat %>%
@@ -29,5 +29,5 @@ plot_selex <- function(year, model){
     funcr::theme_report() +
     ggplot2::theme(legend.justification=c(1,0), legend.position=c(0.9,0.2))
 
-  ggplot2::ggsave(here::here(year, model, "figs/selex.png"), width = 6.5, height = 5.5, units = "in", dpi = 200)
+  ggplot2::ggsave(here::here(year, model, "figs", "selex.png"), width = 6.5, height = 5.5, units = "in", dpi = 200)
 }

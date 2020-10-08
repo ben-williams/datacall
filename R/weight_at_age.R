@@ -15,21 +15,21 @@ weight_at_age <- function(year, admb_home, rec_age){
     R2admb::setup_admb(admb_home)
   }
 
-  if (!file.exists(here::here(year,"data/output/ae_model.csv"))){
+  if (!file.exists(here::here(year,"data", "output", "ae_model.csv"))){
     stop("You must first run the age-error function 'ageage()")
   } else {
-  nages_m = nrow(read.csv(here::here(year, "data/output/ae_model.csv")))
+  nages_m = nrow(read.csv(here::here(year, "data", "output", "ae_model.csv")))
   ages_m = rec_age:(rec_age + nages_m - 1)
   }
 
 
   # data ----
-  read.csv(here::here(year, "data/raw/srv_saa_length.csv")) %>%
+  read.csv(here::here(year, "data", "raw", "srv_saa_length.csv")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::filter(year >= 1990, !is.na(length)) -> length_data_raw
 
 
-  read.csv(here::here(year, "data/raw/srv_saa_age.csv")) %>%
+  read.csv(here::here(year, "data", "raw", "srv_saa_age.csv")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::select(year, age, length, weight) %>%
     dplyr::filter(year >= 1990, !is.na(age))  %>%
@@ -160,7 +160,7 @@ weight_at_age <- function(year, admb_home, rec_age){
 
   # Write data
   write.csv(WaA_stats,
-            here::here(year, "data/output/waa_stats.csv"), row.names = FALSE)
+            here::here(year, "data", "output", "waa_stats.csv"), row.names = FALSE)
 
   # Get/compile weight-at-length statistics
   lw_data = cbind(age_data_raw$length, age_data_raw$weight)
@@ -190,7 +190,7 @@ weight_at_age <- function(year, admb_home, rec_age){
   lw_mdl_data = as.data.frame(lw_mdl_data)
 
   # Write data
-  write.csv(lw_mdl_data, here::here(year, "data/output/wal_stats.csv"),
+  write.csv(lw_mdl_data, here::here(year, "data", "output", "wal_stats.csv"),
             row.names = FALSE)
 
 
@@ -205,7 +205,7 @@ weight_at_age <- function(year, admb_home, rec_age){
           "# SD in Observed mean weight (SD_Wbar)",
           paste(lw_mdl_data$SD_Wbar, collapse=" "))
 
-  setwd(here::here(year, "data/models/allometric"))
+  setwd(here::here(year, "data", "models", "allometric"))
   write.table(DAT, "allometric.dat", quote=FALSE,
               row.names=FALSE, col.names=FALSE)
 
@@ -220,11 +220,11 @@ weight_at_age <- function(year, admb_home, rec_age){
   setwd(here::here())
 
   allo = data.frame(alpha_lw = alpha_lw, beta_lw = beta_lw)
-  write.csv(allo, here::here(year, "data/output/alpha_beta_lw.csv"))
+  write.csv(allo, here::here(year, "data", "output", "alpha_beta_lw.csv"))
 
 
 
-  setwd(here::here(year, "data/models/wVBL"))
+  setwd(here::here(year, "data", "models", "wVBL"))
 
   # Run LVBmodel and estimate mean weight
   PIN <- c("# Parameter starting values for LVB model of mean weight",
@@ -266,8 +266,8 @@ weight_at_age <- function(year, admb_home, rec_age){
   Wbar = round(Wbar, digits=1)
   Wbar_params = cbind(Winf, k, t0, beta_lw)
 
-  write.csv(Wbar_params, here::here(year, "data/output/Wbar_params.csv"), row.names = FALSE)
-  write.csv(Wbar, here::here(year, "data/output/waa.csv"), row.names = FALSE)
+  write.csv(Wbar_params, here::here(year, "data", "output", "Wbar_params.csv"), row.names = FALSE)
+  write.csv(Wbar, here::here(year, "data", "output", "waa.csv"), row.names = FALSE)
 
   Wbar}
 

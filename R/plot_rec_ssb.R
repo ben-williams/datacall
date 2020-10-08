@@ -14,8 +14,8 @@ plot_rec_ssb <- function(year, model, rec_age){
     stop("must run 'process_results' before creating figures")
   }
 
-read.csv(here::here(year, model, "processed/ages_yrs.csv"))$yrs -> yrs
-read.csv(here::here(year, model, "processed/bio_rec_f.csv")) %>%
+read.csv(here::here(year, model, "processed", "ages_yrs.csv"))$yrs -> yrs
+read.csv(here::here(year, model, "processed", "bio_rec_f.csv")) %>%
   dplyr::select(sp_biom, recruits) %>%
   dplyr::bind_cols(year = yrs) -> dat
 
@@ -33,5 +33,5 @@ data.frame(ssb = dat$sp_biom[1:(length(yrs) - rec_age)] / 1000,
   ggplot2::ylab("Recruitment (millions)\n") +
   funcr::theme_report()
 
-ggplot2::ggsave(here::here(year, model, "figs/recr-ssb.png"), width = 6.5, height = 5.5, units = "in", dpi = 200)
+ggplot2::ggsave(here::here(year, model, "figs", "recr-ssb.png"), width = 6.5, height = 5.5, units = "in", dpi = 200)
 }

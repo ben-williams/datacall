@@ -12,7 +12,7 @@ survey_biomass <- function(year, file = NULL){
 
   if(is.null(file)){
 
-    read.csv(here::here(year, "data/raw/srv_biomass.csv")) %>%
+    read.csv(here::here(year, "data", "raw", "srv_biomass.csv")) %>%
       dplyr::rename_all(tolower) %>%
       dplyr::group_by(year) %>%
       dplyr::summarise(biomass = total_biomass,
@@ -22,10 +22,10 @@ survey_biomass <- function(year, file = NULL){
       dplyr::mutate(lci = ifelse(lci < 0, 0, lci)) %>%
       dplyr::mutate_if(is.double, round) -> sb
   } else {
-      read.csv(here::here(year, "data/user_input", file)) -> sb
+      read.csv(here::here(year, "data", "user_input", file)) -> sb
     }
 
-  write.csv(sb, here::here(year, "data/output/survey_biomass.csv"), row.names = FALSE)
+  write.csv(sb, here::here(year, "data", "output", "survey_biomass.csv"), row.names = FALSE)
 
   sb
 }

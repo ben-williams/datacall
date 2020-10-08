@@ -14,7 +14,7 @@ plot_params <- function(year, model, model_name){
     stop("must run 'process_results' before creating figures")
   }
 
-  read.csv(here::here(year, model, "processed/ages_yrs.csv"))$yrs -> yrs
+  read.csv(here::here(year, model, "processed", "ages_yrs.csv"))$yrs -> yrs
 
   ggplot2::theme_set(funcr::theme_report())
 
@@ -36,7 +36,7 @@ plot_params <- function(year, model, model_name){
                                            TRUE ~ value),
                   name = factor(name, levels = c("q_srv", "natmort", "F", "ABC", "tot_biom_", "spawn_biom_"))) -> fits
 
-   read.csv(here::here(year, model, "processed/mceval.csv"))  %>%
+   read.csv(here::here(year, model, "processed", "mceval.csv"))  %>%
      dplyr::select(q_srv1, ABC, natmort, paste0("tot_biom_", yrs),
                    F40, paste0("spawn_biom_", yrs)) %>%
      dplyr::mutate(group = 1:dplyr::n()) %>%
@@ -119,6 +119,6 @@ plot_params <- function(year, model, model_name){
 
    p7 <- cowplot::plot_grid(p1, p4, p2, p5, p3, p6, align = "v", ncol = 2, rel_heights = c(0.5, 0.5))
 
-   cowplot::save_plot(here::here(year, model, "figs/hists.png"), p7)
+   cowplot::save_plot(here::here(year, model, "figs", "hists.png"), p7)
 
 }

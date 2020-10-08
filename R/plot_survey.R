@@ -13,8 +13,12 @@ plot_survey <- function(year, model){
     stop("must run 'process_results' before creating figures")
   }
 
-  read.csv(here::here(year, model, "processed/survey.csv")) %>%
-    dplyr::select(-X, Observed = biomass, Predicted = pred) %>%
+  read.csv(here::here(year, model, "processed", "survey.csv")) %>%
+    rename_all(tolower) %>%
+    dplyr::select(year = starts_with("y"),
+                  Observed = starts_with("bio"),
+                  Predicted = pred,
+                  se, lci, uci) %>%
     tidyr::pivot_longer(-c(year, se, uci, lci)) %>%
     dplyr::mutate(value = value / 1000,
                   uci = uci / 1000,
@@ -40,6 +44,6 @@ plot_survey <- function(year, model){
     ggplot2::theme(legend.justification=c(1,0),
                    legend.position=c(0.98,0.8))
 
-  ggplot2::ggsave(here::here(year, model, "figs/srv1_biomass.png"),
+  ggplot2::ggsave(here::here(year, model, "figs", "srv1_biomass.png"),
          width = 6.5, height = 6.5, units = "in", dpi = 200)
 }

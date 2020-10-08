@@ -14,10 +14,10 @@ fish_size_comp <- function(YEAR, rec_age, lenbins = NULL){
     if(is.null(lenbins)){
       lenbins = read.csv(here::here(YEAR, "data/user_input/len_bin_labels.csv"))$len_bins
     } else {
-      lenbins = read.csv(lenbins)
+      lenbins = read.csv(here::here(year, "data", "user_input", lenbins))$len_bins
     }
 
-  read.csv(here::here(year, "data/raw/fishery_age_comp_data.csv")) %>%
+  read.csv(here::here(year, "data", "raw", "fishery_age_comp_data.csv")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::filter(!is.na(age), age>=rec_age, year>1990 & year<YEAR) %>%
     dplyr::group_by(year) %>%
@@ -25,7 +25,7 @@ fish_size_comp <- function(YEAR, rec_age, lenbins = NULL){
     dplyr::filter(age>49) %>%
     dplyr::ungroup() -> ages
 
-read.csv(here::here(year, "data/raw/fishery_size_comp_freq.csv"),
+read.csv(here::here(year, "data", "raw", "fishery_size_comp_freq.csv"),
          colClasses = c(HAUL_JOIN = "character",
                         PORT_JOIN = "character")) %>%
     dplyr::rename_all(tolower) %>%
@@ -48,7 +48,7 @@ read.csv(here::here(year, "data/raw/fishery_size_comp_freq.csv"),
     dplyr::select(-length_tot) %>%
     tidyr::pivot_wider(names_from = length, values_from = prop) -> fish_size_comp
 
-  readr::write_csv(fish_size_comp, here::here(year, "data/output/fish_size_comp.csv"))
+  readr::write_csv(fish_size_comp, here::here(year, "data", "output", "fish_size_comp.csv"))
 
   fish_size_comp
 

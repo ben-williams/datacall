@@ -11,8 +11,8 @@
 #' @examples
 size_at_age<- function(year, admb_home, rec_age, lenbins = NULL){
 
-  if (!dir.exists(here::here(year, "/data/output"))){
-    dir.create(here::here(year, "/data/output"), recursive=TRUE)
+  if (!dir.exists(here::here(year, "data", "output"))){
+    dir.create(here::here(year, "data", "output"), recursive=TRUE)
   }
 
   if(is.null(admb_home)){
@@ -21,20 +21,20 @@ size_at_age<- function(year, admb_home, rec_age, lenbins = NULL){
     R2admb::setup_admb(admb_home)
   }
 
-  if (!file.exists(here::here(year,"data/output/ae_model.csv"))){
+  if (!file.exists(here::here(year,"data", "output", "ae_model.csv"))){
     stop("You must first run the age-error function 'ageage()")
   } else {
-    nages_m = nrow(read.csv(here::here(year, "data/output/ae_model.csv")))
+    nages_m = nrow(read.csv(here::here(year, "data", "output", "ae_model.csv")))
     ages_m = rec_age:(rec_age + nages_m - 1)
   }
 
   if(is.null(lenbins)){
-    lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
+    lenbins = read.csv(here::here(year, "data", "user_input", "len_bin_labels.csv"))$len_bins
   } else {
-    lenbins = read.csv(lenbins)
+    lenbins = read.csv(here::here(year, "data", "user_input", lenbins))$len_bins
   }
 
-  read.csv(here::here(year, "data/raw/srv_saa_age.csv")) %>%
+  read.csv(here::here(year, "data", "raw", "srv_saa_age.csv")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::select(year, age, length) %>%
     dplyr::filter(year>=1990, !is.na(age))  %>%
@@ -47,7 +47,7 @@ size_at_age<- function(year, admb_home, rec_age, lenbins = NULL){
     dplyr::group_by(age) %>%
     dplyr::mutate(sample_size =  dplyr::n()) -> inter
 
-  read.csv(here::here(year, "data/raw/srv_saa_length.csv")) %>%
+  read.csv(here::here(year, "data", "raw", "srv_saa_length.csv")) %>%
     dplyr::rename_all(tolower) %>%
     dplyr::filter(year>=1990, !is.na(length)) %>%
     dplyr::select(frequency, length) %>%
@@ -63,14 +63,14 @@ size_at_age<- function(year, admb_home, rec_age, lenbins = NULL){
                      SD_Lbar = sqrt(1 / (sum(prop) - 1) * sum(prop * (length / 10 - Lbar)^2))) %>%
     dplyr::filter(SD_Lbar>=0.01) -> laa_stats
 
-  write.csv(laa_stats, here::here(year, "data/output/laa_stats.csv"), row.names = FALSE)
+  write.csv(laa_stats, here::here(year, "data", "output", "laa_stats.csv"), row.names = FALSE)
 
   laa_stats
 
 
   # run models ----
 
-  setwd(here::here(year, "data/models/VBL"))
+  setwd(here::here(year, "data", "models", "VBL"))
   # Estimate mean length
   c("# Data file for LVB model of mean length",
     "# Number of ages (nages)",
@@ -95,7 +95,7 @@ size_at_age<- function(year, admb_home, rec_age, lenbins = NULL){
 
 
   # run model 2
-  setwd(here::here(year, "data/models/length_sd"))
+  setwd(here::here(year, "data", "models", "length_sd"))
 
   c("# Data file for LVB model of mean length",
     "# Number of ages (nages)",
@@ -116,7 +116,7 @@ size_at_age<- function(year, admb_home, rec_age, lenbins = NULL){
   b <- STD$value[2]
   (params <- cbind(Linf, k, t0, a, b))
 
-  write.csv(params, here::here(year, "data/output/lbar_params.csv"), row.names = FALSE)
+  write.csv(params, here::here(year, "data", "output", "lbar_params.csv"), row.names = FALSE)
 
 
   # Compute Sz@A transition matrix
@@ -136,7 +136,7 @@ size_at_age<- function(year, admb_home, rec_age, lenbins = NULL){
     dplyr::mutate(!!rev(names(.))[1] := 1 - rowSums(.[2:(ncol(.) - 1)])) %>%
     dplyr::mutate_at(2:ncol(.), round, 4) -> saa
 
-  write.csv(saa, here::here(year, "data/output/saa.csv"), row.names = FALSE)
+  write.csv(saa, here::here(year, "data", "output", "saa.csv"), row.names = FALSE)
   saa
 
 }

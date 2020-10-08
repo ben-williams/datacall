@@ -11,14 +11,14 @@
 clean_catch <- function(year, TAC, old_catch = NULL){
 
   if(!is.null(old_catch)){
-    old_catch = read.csv(here::here(year, "data/user_input", old_catch))
+    old_catch = read.csv(here::here(year, "data", "user_input", old_catch))
   } else {
-    old_catch = read.csv(here::here(year, "data/user_input/catch_1961-1992.csv"))
+    old_catch = read.csv(here::here(year, "data", "user_input", "catch_1961-1992.csv"))
   }
 
   # Fishery catch data ----
-  read.csv(here::here(year, "data/raw/fishery_catch_data.csv")) -> catch_data
-  read.csv(here::here(year, "data/raw/fishery_obs_data.csv")) -> obs_data
+  read.csv(here::here(year, "data", "raw", "fishery_catch_data.csv")) -> catch_data
+  read.csv(here::here(year, "data", "raw", "fishery_obs_data.csv")) -> obs_data
 
   # Estimate catch ratio in final year to end of year
   obs_data %>%
@@ -41,7 +41,7 @@ clean_catch <- function(year, TAC, old_catch = NULL){
     dplyr::bind_rows(old_catch) %>%
     dplyr::arrange(Year) %>%
     dplyr::mutate(Catch = ifelse(Year==year, round(Catch * ratio), Catch)) -> catch
-  write.csv(catch, here::here(year, "data/output/catch.csv"), row.names = FALSE)
+  write.csv(catch, here::here(year, "data", "output", "catch.csv"), row.names = FALSE)
 
   # estimate yield ratio of previous 3 years relative to TAC
   catch %>%
@@ -49,5 +49,5 @@ clean_catch <- function(year, TAC, old_catch = NULL){
     dplyr::bind_cols(tac = TAC) %>%
     dplyr::mutate(yld = Catch / tac) %>%
     dplyr::summarise(yld = mean(yld)) %>%
-    write.csv(here::here(year, "data/output/yld_rat.csv"), row.names = FALSE)
+    write.csv(here::here(year, "data", "output", "yld_rat.csv"), row.names = FALSE)
 }

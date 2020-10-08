@@ -12,7 +12,8 @@
 #' @export process_results
 #'
 #' @examples
-process_results <- function(year, model, model_name, data_name, rec_age, plus_age, mcmc, mcsave, ...){
+process_results <- function(year, model, model_name, data_name,
+                            rec_age, plus_age, mcmc, mcsave, survey = NULL,...){
 
   # setup
   if (!dir.exists(here::here(year, model, "processed"))){
@@ -59,7 +60,7 @@ process_results <- function(year, model, model_name, data_name, rec_age, plus_ag
   suppressWarnings(as.data.frame(cbind(yrs = yrs, ages = ages, styr_rec = styr_rec)) %>%
                      dplyr::mutate(ages = replace(ages, duplicated(ages), NA),
                                    styr_rec = replace(styr_rec, duplicated(styr_rec), NA))) %>%
-    write.csv(here::here(year, model, "processed/ages_yrs.csv"))
+    write.csv(here::here(year, model, "processed", "ages_yrs.csv"), row.names = FALSE)
 
   # MCMC parameters ----
 
@@ -69,7 +70,7 @@ process_results <- function(year, model, model_name, data_name, rec_age, plus_ag
   mcmc_params = matrix(mcmc, byrow=TRUE, ncol=npar)
   mcmc_params = mcmc_params[501:nrow(mcmc_params),]
   colnames(mcmc_params) = STD$name[1:ncol(mcmc_params)]
-  write.csv(mcmc_params, here::here(year, model, "processed/mcmc.csv"))
+  write.csv(mcmc_params, here::here(year, model, "processed", "mcmc.csv"), row.names = FALSE)
 
   # mceval phase output ----
 
@@ -91,7 +92,7 @@ process_results <- function(year, model, model_name, data_name, rec_age, plus_ag
                        paste0("pred_catch_proj_", max(yrs) + 1:15),
                        paste0("rec_proj_", max(yrs) + 1:10),
                        paste0("tot_biom_proj_", max(yrs) + 1:15))
-  write.csv(mceval, here::here(year, model, "processed/mceval.csv"))
+  write.csv(mceval, here::here(year, model, "processed", "mceval.csv"), row.names = FALSE)
 
   # catch data ----
 
@@ -113,10 +114,14 @@ process_results <- function(year, model, model_name, data_name, rec_age, plus_ag
 
 
   # survey data ----
+  if(is.null(survey)){
+    dat = read.csv(here::here(year, "data", "output", "survey_biomass.csv")) %>%
+      dplyr::rename_all(tolower)
+  } else {
+    dat = read.csv(here::here(year, "data", "user_input", survey)) %>%
+      dplyr::rename_all(tolower)
+  }
 
-  read.csv(here::here(year, "data/output/survey_biomass.csv")) %>%
-    dplyr::select(-X) %>%
-    dplyr::rename_all(tolower)-> dat
 
   pred = REP[grep("Survey Biomass",REP)[1]:(grep("Survey Biomass",REP)[2]-2)][3]
   pred = strsplit(pred," ")
@@ -125,7 +130,7 @@ process_results <- function(year, model, model_name, data_name, rec_age, plus_ag
 
   dat %>%
     dplyr::bind_cols(pred = pred) %>%
-    write.csv(here::here(year, model, "processed/survey.csv"))
+    write.csv(here::here(year, model, "processed", "survey.csv"), row.names = FALSE)
 
 
   # Recruitment ----
@@ -142,21 +147,21 @@ process_results <- function(year, model, model_name, data_name, rec_age, plus_ag
              sp_biom = rep_item("SpBiom"),
              F = rep_item("Fully_selected_F"),
              recruits = pred_rec) %>%
-    write.csv(here::here(year, model, "processed/bio_rec_f.csv"))
+    write.csv(here::here(year, model, "processed", "bio_rec_f.csv"), row.names = FALSE)
 
 
   # Selectivity ----
   data.frame(age = ages,
              fish = rep_item("Fishery_Selectivity"),
              srv1 = rep_item("TWL Survey_Selectivity")) %>%
-    write.csv(here::here(year, model, "processed/selex.csv"))
+    write.csv(here::here(year, model, "processed", "selex.csv"), row.names = FALSE)
 
   # Yield ratio B40 & B35----
 
   data.frame(B40 = STD$value[which(STD$name=="B40")],
     B35 = as.numeric(REP[(grep("B_35",REP)+1):(grep("F_40",REP)[1]-1)]),
     yld_rat = as.numeric(unlist(strsplit(CTL[grep("yieldratio", CTL)], "\t"))[1])) %>%
-    write.csv(here::here(year, model, "processed/b35_b40_yld.csv"))
+    write.csv(here::here(year, model, "processed", "b35_b40_yld.csv"), row.names = FALSE)
 
   # size comps ----
 
@@ -174,16 +179,16 @@ process_results <- function(year, model, model_name, data_name, rec_age, plus_ag
   s_obs_l = REP[grep("Obs_P_srv1_size",REP):(grep("Pred_P_srv1_size",REP)-2)]
 
   purrit(obs, pred, rec_age, plus_age, comp = "age") %>%
-    write.csv(here::here(year, model, "processed/fac.csv"))
+    write.csv(here::here(year, model, "processed", "fac.csv"))
 
   purrit(obs_l, pred_l, rec_age, plus_age, comp = "length") %>%
-    write.csv(here::here(year, model, "processed/fsc.csv"))
+    write.csv(here::here(year, model, "processed", "fsc.csv"))
 
   purrit(s_obs, s_pred, rec_age, plus_age, comp = "age") %>%
-    write.csv(here::here(year, model, "processed/sac.csv"))
+    write.csv(here::here(year, model, "processed", "sac.csv"))
 
   purrit(s_obs_l, pred = NULL, rec_age, plus_age, comp = "length") %>%
-    write.csv(here::here(year, model, "processed/ssc.csv"))
+    write.csv(here::here(year, model, "processed", "ssc.csv"))
 
 
 }

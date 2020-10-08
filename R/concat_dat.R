@@ -18,19 +18,19 @@ concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = 
   if(is.null(lenbins)){
     lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
   } else {
-    lenbins = read.csv(lenbins)$len_bins
+    lenbins = read.csv(here::here(year, "data", "user_input", lenbins))$len_bins
   }
 
-  catch = read.csv(here::here(year, "data/output/catch.csv"))
-  ssc = read.csv(here::here(year, "data/output/survey_size_comp.csv"))
-  waa = read.csv(here::here(year, "data/output/waa.csv"))
-  saa = read.csv(here::here(year, "data/output/SaA.csv"))
-  ae = read.csv(here::here(year, "data/output/ae_model.csv"))
-  fishac = read.csv(here::here(year, "data/output/fish_age_comp.csv"))
-  fishsc = read.csv(here::here(year, "data/output/fish_size_comp.csv"))
-  srvac = read.csv(here::here(year, "data/output/survey_age_comp.csv"))
-  tssc = read.csv(here::here(year, "data/output/survey_size_comp.csv"))
-  tsb = read.csv(here::here(year, "data/output/survey_biomass.csv"))
+  catch = read.csv(here::here(year, "data", "output", "catch.csv"))
+  ssc = read.csv(here::here(year, "data", "output", "survey_size_comp.csv"))
+  waa = read.csv(here::here(year, "data", "output", "waa.csv"))
+  saa = read.csv(here::here(year, "data", "output", "SaA.csv"))
+  ae = read.csv(here::here(year, "data", "output", "ae_model.csv"))
+  fishac = read.csv(here::here(year, "data", "output", "fish_age_comp.csv"))
+  fishsc = read.csv(here::here(year, "data", "output", "fish_size_comp.csv"))
+  srvac = read.csv(here::here(year, "data", "output", "survey_age_comp.csv"))
+  tssc = read.csv(here::here(year, "data", "output", "survey_size_comp.csv"))
+  tsb = read.csv(here::here(year, "data", "output", "survey_biomass.csv"))
   names(tsb) <- c("year", "biomass", "se", "lci", "uci")
   m_nages = nrow(ae)
   nages = length(rec_age:plus_age)

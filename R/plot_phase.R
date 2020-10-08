@@ -15,9 +15,9 @@ plot_phase <- function(year, model, model_name){
   }
 
   STD <- read.delim(here::here(year, model, paste0(model_name, ".std")), sep="", header = TRUE)
-  bio = read.csv(here::here(year, model, "processed/bio_rec_f.csv"))
-  bby = read.csv(here::here(year, model, "processed/b35_b40_yld.csv"))
-  yrs = read.csv(here::here(year, model, "processed/ages_yrs.csv"))$yrs
+  bio = read.csv(here::here(year, model, "processed", "bio_rec_f.csv"))
+  bby = read.csv(here::here(year, model, "processed", "b35_b40_yld.csv"))
+  yrs = read.csv(here::here(year, model, "processed", "ages_yrs.csv"))$yrs
   B35 = bby$B35
   yield = bby$yld_rat
 
@@ -63,7 +63,7 @@ plot_phase <- function(year, model, model_name){
   # ggplot2::theme(zoom.y = element_blank(), validate = FALSE)
 
 
-  ggplot2::ggsave(here::here(year, model, "figs/phase_plane.png"),
+  ggplot2::ggsave(here::here(year, model, "figs", "phase_plane.png"),
          width = 6.5, height = 6.5, units = "in", dpi = 200)
 
 }

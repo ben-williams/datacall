@@ -14,9 +14,9 @@
 purrit <- function(obs, pred = NULL, rec_age, plus_age, comp = "length", lenbins = NULL){
 
   if(is.null(lenbins)){
-    lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
+    lenbins = read.csv(here::here(year, "data", "user_input", "len_bin_labels.csv"))$len_bins
   } else {
-    lenbins = read.csv(lenbins)
+    lenbins = read.csv(here::here(year, "data", "user_input", lenbins))$len_bins
   }
 
   obs = stringr::str_split(obs, " ")

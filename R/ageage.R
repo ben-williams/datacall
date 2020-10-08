@@ -20,7 +20,7 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
 
 
   if(is.null(reader_tester)){
-    rt = read.csv(here::here(year, "data/user_input/reader_tester.csv"))
+    rt = read.csv(here::here(year, "data", "user_input", "reader_tester.csv"))
   } else{
     rt = read.csv(reader_tester)
   }
@@ -68,15 +68,15 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
     "# Age vector", dats$age,
     "# Percent agreement vector", dats$ape,
     "# Sample size vector", dats$ss) %>%
-    write.table(here::here(year, "data/models/ageage/AGEAGE.DAT"),
+    write.table(here::here(year, "data", "models", "ageage", "AGEAGE.DAT"),
                 sep="", quote=F, row.names=F, col.names=F)
 
-  setwd(here::here(year, "data/models/ageage"))
+  setwd(here::here(year, "data", "models", "ageage"))
   R2admb::compile_admb("AGEAGE", verbose = TRUE)
   R2admb::run_admb("AGEAGE", verbose=TRUE)
 
   setwd(here::here())
-  read.delim(here::here(year, "data/models/ageage/AGEAGE.STD"), sep="") %>%
+  read.delim(here::here(year, "data", "models", "ageage", "AGEAGE.STD"), sep="") %>%
     dplyr::filter(grepl("_a", name)) %>%
     dplyr::bind_cols(dats) %>%
     dplyr::select(age, value) -> sds
@@ -110,8 +110,8 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
     mtx100[j,nrow(fits)] = 1 - sum(mtx100[j, 1:(nrow(fits) - 1)])
   }
 
-  write.csv(mtx100, here::here(paste0(year, "/data/output/ae_mtx_", max_age, ".csv")), row.names = FALSE)
-  write.csv(fits,  here::here(year, "data/output/ae_SD.csv"), row.names = FALSE)
+  write.csv(mtx100, here::here(paste0(year, "data", "output", "ae_mtx_", max_age, ".csv")), row.names = FALSE)
+  write.csv(fits,  here::here(year,"data", "output", "ae_SD.csv"), row.names = FALSE)
 
   # Compute ageing error matrix for model
   ae_Mdl <- matrix(nrow=length(ages), ncol=nages)
@@ -121,7 +121,7 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
   r <- which(ae_Mdl[, nages]>=0.999)[1]
   ae_Mdl <- ae_Mdl[1:r,]
 
-  write.csv(ae_Mdl,  here::here(year, "data/output/ae_model.csv"), row.names = FALSE)
+  write.csv(ae_Mdl,  here::here(year, "data", "output", "ae_model.csv"), row.names = FALSE)
   ae_Mdl
 
 }

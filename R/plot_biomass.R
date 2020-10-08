@@ -13,16 +13,16 @@ plot_biomass <- function(year, model){
     stop("must run 'process_results' before creating figures")
   }
 
-  yrs = read.csv(here::here(year, model, "processed/ages_yrs.csv"))$yrs
-  bio = read.csv(here::here(year, model, "processed/bio_rec_f.csv"))
+  yrs = read.csv(here::here(year, model, "processed", "ages_yrs.csv"))$yrs
+  bio = read.csv(here::here(year, model, "processed", "bio_rec_f.csv"))
 
-  read.csv(here::here(year, model, "processed/mceval.csv"))  %>%
+  read.csv(here::here(year, model, "processed", "mceval.csv"))  %>%
     dplyr::select(paste0("tot_biom_", yrs)) %>%
     dplyr::mutate(group = 1:dplyr::n()) %>%
     tidyr::pivot_longer(-group) %>%
     dplyr::mutate(year = as.numeric(gsub("tot_biom_", "", name)),
                   name = "Total biomass") %>%
-    dplyr::bind_rows( read.csv(here::here(year, model, "processed/mceval.csv")) %>%
+    dplyr::bind_rows( read.csv(here::here(year, model, "processed", "mceval.csv")) %>%
                         dplyr::select(paste0("spawn_biom_", yrs)) %>%
                         dplyr::mutate(group = 1) %>%
                         tidyr::pivot_longer(-group) %>%
@@ -52,5 +52,5 @@ plot_biomass <- function(year, model){
                                 labels = funcr::tickr(dat, year, 10, start = 1960)$labels) +
     funcr::theme_report()
 
-  ggsave(here::here(year, model, "figs/est_biomass.png"), width = 6.5, height = 6.5, units = "in", dpi = 200)
+  ggsave(here::here(year, model, "figs", "est_biomass.png"), width = 6.5, height = 6.5, units = "in", dpi = 200)
 }
