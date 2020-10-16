@@ -52,70 +52,82 @@ plot_params <- function(year, model, model_name){
      dplyr::filter(name == "q_srv") %>%
      ggplot2::ggplot(ggplot2::aes(value)) +
      # facet_wrap(~name, scales = "free", dir = "v") +
-     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
-                             color = "black", fill = "lightgray") +
+     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..], fill = ..density..),
+                             color = NA, bins = 60) +
+     scico::scale_fill_scico(palette = "devon", direction = -1) +
      ggplot2::scale_x_continuous(breaks = seq(0,2.5,0.5)) +
      ggplot2::geom_segment(data = dplyr::filter(fits, name == "q_srv"),
-                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size =2) +
+                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::theme(axis.title.y = ggplot2::element_blank()) +
-     ggplot2::xlab(expression("Trawl survey catchability ("*italic(q)*")"))
+     ggplot2::xlab(expression("Trawl survey catchability ("*italic(q)*")")) +
+     theme(legend.position = "none")
 
 
    p2 = dat %>%
      dplyr::filter(name == "natmort") %>%
      ggplot2::ggplot(ggplot2::aes(value)) +
      # facet_wrap(~name, scales = "free", dir = "v") +
-     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
-                             color = "black", fill = "lightgray") +
+     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..], fill = ..density..),
+                             color = NA, bins = 60) +
+     scico::scale_fill_scico(palette = "devon", direction = -1) +
      ggplot2::geom_segment(data = dplyr::filter(fits, name == "natmort"),
-                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size =2) +
+                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::ylab("Probability density\n") +
-     ggplot2::xlab(expression("Natural mortality ("*italic(M)*")"))
+     ggplot2::xlab(expression("Natural mortality ("*italic(M)*")")) +
+     theme(legend.position = "none")
 
    p3 = dat %>%
      dplyr::filter(name == "F") %>%
      ggplot2::ggplot(ggplot2::aes(value)) +
      # facet_wrap(~name, scales = "free", dir = "v") +
-     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
-                             color = "black", fill = "lightgray") +
+     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..], fill = ..density..),
+                             color = NA, bins = 60) +
+     scico::scale_fill_scico(palette = "devon", direction = -1) +
      ggplot2::geom_segment(data = dplyr::filter(fits, name == "F"),
-                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size =2) +
+                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::theme(axis.title.y = ggplot2::element_blank()) +
-     ggplot2::xlab(expression(italic(F)["40%"]))
+     ggplot2::xlab(expression(italic(F)["40%"])) +
+     theme(legend.position = "none")
 
    p4 = dat %>%
      dplyr::filter(name == "ABC") %>%
      ggplot2::ggplot(ggplot2::aes(value)) +
      # facet_wrap(~name, scales = "free", dir = "v") +
-     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
-                             color = "black", fill = "lightgray") +
+     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..], fill = ..density..),
+                             color = NA, bins = 60) +
+     scico::scale_fill_scico(palette = "devon", direction = -1) +
      ggplot2::geom_segment(data = dplyr::filter(fits, name == "ABC"),
-                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size =2) +
+                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::theme(axis.title.y = ggplot2::element_blank()) +
-     ggplot2::xlab("ABC (kt)")
+     ggplot2::xlab("ABC (kt)") +
+     theme(legend.position = "none")
 
 
    p5 = dat %>%
      dplyr::filter(name == "tot_biom_") %>%
      ggplot2::ggplot(ggplot2::aes(value)) +
      # facet_wrap(~name, scales = "free", dir = "v") +
-     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
-                             color = "black", fill = "lightgray") +
+     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..], fill = ..density..),
+                             color = NA, bins = 60) +
+     scico::scale_fill_scico(palette = "devon", direction = -1) +
      ggplot2::geom_segment(data = dplyr::filter(fits, name == "tot_biom_"),
-                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size =2) +
+                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::theme(axis.title.y = ggplot2::element_blank()) +
-     ggplot2::xlab("Current total biomass (kt)")
+     ggplot2::xlab("Current total biomass (kt)") +
+     theme(legend.position = "none")
 
    p6 = dat %>%
-     dplyr::filter(name == "q_srv") %>%
+     dplyr::filter(name == "spawn_biom_") %>%
      ggplot2::ggplot(ggplot2::aes(value)) +
      # facet_wrap(~name, scales = "free", dir = "v") +
-     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
-                             color = "black", fill = "lightgray") +
-     ggplot2::geom_segment(data = dplyr::filter(fits, name == "q_srv"),
-                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size =2) +
+     ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..], fill = ..density..),
+                             color = NA, bins = 60) +
+     scico::scale_fill_scico(palette = "devon", direction = -1) +
+     ggplot2::geom_segment(data = dplyr::filter(fits, name == "spawn_biom_"),
+                           mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::theme(axis.title.y = ggplot2::element_blank()) +
-     ggplot2::xlab("Current spawning biomass (kt)")
+     ggplot2::xlab("Current spawning biomass (kt)") +
+     theme(legend.position = "none")
 
    p7 <- cowplot::plot_grid(p1, p4, p2, p5, p3, p6, align = "v", ncol = 2, rel_heights = c(0.5, 0.5))
 
