@@ -131,6 +131,7 @@ plot_params <- function(year, model, model_name){
 
    p7 <- cowplot::plot_grid(p1, p4, p2, p5, p3, p6, align = "v", ncol = 2, rel_heights = c(0.5, 0.5))
 
-   cowplot::save_plot(here::here(year, model, "figs", "hists.png"), p7)
+   # cowplot::save_plot(here::here(year, model, "figs", "hists.png"), p7, nrow = 3, ncol = 2)
+   ggsave(here::here(year, model, "figs", "hists.png"), p7, width = 6.5, height = 8.5, units = "in", dpi = 200)
 
 }

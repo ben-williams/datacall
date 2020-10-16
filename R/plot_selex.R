@@ -15,7 +15,7 @@ plot_selex <- function(year, model){
 
 
   read.csv(here::here(year, model, "processed", "selex.csv")) %>%
-    dplyr::select(-X, Fishery = fish, Survey = srv1) -> dat
+    dplyr::select(Fishery = fish, Survey = srv1) -> dat
 
   dat %>%
     tidyr::pivot_longer(-age) %>%

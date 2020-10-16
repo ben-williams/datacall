@@ -39,7 +39,7 @@ plot_comps <- function(year, model){
     funcr::theme_report() +
     ggplot2::theme(legend.position = "none")
 
-  ggplot2::ggsave(here::here(year, model, paste0("figs", "fishery_age_comp.png")),
+  ggplot2::ggsave(here::here(year, model, "figs", "fishery_age_comp.png"),
                   width = 6.5, height = 6.5, units = "in", dpi = 200)
 
   variable = "length"
@@ -67,7 +67,7 @@ plot_comps <- function(year, model){
     funcr::theme_report() +
     ggplot2::theme(legend.position = "none")
 
-  ggplot2::ggsave(here::here(year, model, paste0("figs", "fishery_length_comp.png")),
+  ggplot2::ggsave(here::here(year, model, "figs", "fishery_length_comp.png"),
                   width = 6.5, height = 6.5, units = "in", dpi = 200)
 
   # survey ----
@@ -97,7 +97,7 @@ plot_comps <- function(year, model){
     funcr::theme_report() +
     ggplot2::theme(legend.position = "none")
 
-  ggplot2::ggsave(here::here(year, model, paste0("figs", "survey_age_comp.png")),
+  ggplot2::ggsave(here::here(year, model, "figs", "survey_age_comp.png"),
                   width = 6.5, height = 6.5, units = "in", dpi = 200)
 
   variable = "length"
@@ -125,7 +125,7 @@ plot_comps <- function(year, model){
     funcr::theme_report() +
     ggplot2::theme(legend.position = "none")
 
-  ggplot2::ggsave(here::here(year, model, paste0("figs", "survey_length_comp.png")),
+  ggplot2::ggsave(here::here(year, model, "figs", "survey_length_comp.png"),
                   width = 6.5, height = 6.5, units = "in", dpi = 200)
 
 
