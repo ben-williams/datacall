@@ -22,7 +22,7 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
   if(is.null(reader_tester)){
     rt = read.csv(here::here(year, "data", "user_input", "reader_tester.csv"))
   } else{
-    rt = read.csv(reader_tester)
+    rt = read.csv(here::here(year, "data", "user_input", reader_tester))
   }
 
   if(species == "NORK"){
@@ -40,7 +40,7 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
 
   rt %>%
     dplyr::filter(Species == norpac_species,
-                  Region == "GOA",
+                  Region == region,
                   Read_Age > 0,
                   Test_Age > 0,
                   Final_Age > 0) %>%
@@ -114,12 +114,12 @@ ageage <- function(reader_tester = NULL, species, year, admb_home = NULL, region
   write.csv(fits,  here::here(year,"data", "output", "ae_SD.csv"), row.names = FALSE)
 
   # Compute ageing error matrix for model
-  ae_Mdl <- matrix(nrow=length(ages), ncol=nages)
-  ae_Mdl[, 1:(nages-1)] <- as.matrix(mtx100[, 1:(nages-1)])
-  ae_Mdl[, nages] <- rowSums(mtx100[, nages:length(ages)])
-  ae_Mdl <- round(ae_Mdl, digits=4)
-  r <- which(ae_Mdl[, nages]>=0.999)[1]
-  ae_Mdl <- ae_Mdl[1:r,]
+  ae_Mdl = matrix(nrow=length(ages), ncol=nages)
+  ae_Mdl[, 1:(nages-1)] = as.matrix(mtx100[, 1:(nages-1)])
+  ae_Mdl[, nages] = rowSums(mtx100[, nages:length(ages)])
+  ae_Mdl = round(ae_Mdl, digits=4)
+  r = which(ae_Mdl[, nages]>=0.999)[1]
+  ae_Mdl = ae_Mdl[1:r,]
 
   write.csv(ae_Mdl,  here::here(year, "data", "output", "ae_model.csv"), row.names = FALSE)
   ae_Mdl

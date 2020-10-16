@@ -13,7 +13,7 @@
 #'
 #' @examples concat_dat(year = 2020, model = "base", rec_age = 2, plus_age = 45)
 #'
-concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = NULL, n_sizeage = NULL, lenbins = NULL){
+concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = NULL, n_sizeage = NULL, lenbins = NULL, retro = NULL){
 
   if(is.null(lenbins)){
     lenbins = read.csv(here::here(year, "data/user_input/len_bin_labels.csv"))$len_bins
@@ -21,8 +21,9 @@ concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = 
     lenbins = read.csv(here::here(year, "data", "user_input", lenbins))$len_bins
   }
 
+
+
   catch = read.csv(here::here(year, "data", "output", "catch.csv"))
-  ssc = read.csv(here::here(year, "data", "output", "survey_size_comp.csv"))
   waa = read.csv(here::here(year, "data", "output", "waa.csv"))
   saa = read.csv(here::here(year, "data", "output", "SaA.csv"))
   ae = read.csv(here::here(year, "data", "output", "ae_model.csv"))
@@ -36,7 +37,7 @@ concat_dat <- function(year, model, rec_age, plus_age, spawn_mo = 5, n_ageage = 
   nages = length(rec_age:plus_age)
 
   # get length bin info
-  lbin = as.numeric(gsub("[^0-9.]", "",  colnames(ssc)))
+  lbin = as.numeric(gsub("[^0-9.]", "",  colnames(tssc)))
   lbin = lbin[!is.na(lbin)]
   nlenbins = length(lbin)
 

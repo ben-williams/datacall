@@ -17,7 +17,12 @@ plot_swath <- function(year, model){
   # set view
   ggplot2::theme_set(funcr::theme_report())
 
-  # read in data
+  # establish quantiles
+  q_name <- map_chr(seq(.025,.975,.05), ~ paste0("q", .x*100))
+  q_fun <- map(seq(.025,.975,.05), ~ partial(quantile, probs = .x, na.rm = TRUE)) %>%
+    set_names(nm = q_name)
+
+  # read in data calculate quantiles/median and plot
   read.csv(here::here(year, model, "processed", "ages_yrs.csv"))$yrs -> yrs
   read.csv(here::here(year, model, "processed", "b35_b40_yld.csv")) -> bby
 
@@ -26,32 +31,38 @@ plot_swath <- function(year, model){
                   paste0("spawn_biom_proj_", (max(yrs)+1):(max(yrs+15)))) %>%
     dplyr::mutate(group = 1:dplyr::n()) %>%
     tidyr::pivot_longer(c(-group), values_to = "biomass") %>%
-    dplyr::mutate(year = as.numeric(stringr::str_extract(name, "[[:digit:]]+"))) %>%
+    dplyr::mutate(year = as.numeric(stringr::str_extract(name, "[[:digit:]]+")),
+                  biomass = biomass / 1000) %>%
     dplyr::group_by(year) %>%
-    dplyr::summarise(lci = quantile(biomass, 0.025) / 1000,
-                     lci2 = quantile(biomass, 0.1) / 1000,
-                     median = quantile(biomass, 0.5) / 1000,
-                     uci = quantile(biomass, 0.8) / 1000,
-                     uci2 = quantile(biomass, 0.975) / 1000) -> dat
+    dplyr::summarise_at(vars(biomass), funs(!!!q_fun, median)) %>%
+    tidyr::pivot_longer(-c(year, median)) %>%
+    dplyr::mutate(grouping = dplyr::case_when(name == q_name[1] | name == q_name[20] ~ 1,
+                                              name == q_name[2] | name == q_name[19] ~ 2,
+                                              name == q_name[3] | name == q_name[18] ~ 3,
+                                              name == q_name[4] | name == q_name[17] ~ 4,
+                                              name == q_name[5] | name == q_name[16] ~ 5,
+                                              name == q_name[6] | name == q_name[15] ~ 6,
+                                              name == q_name[7] | name == q_name[14] ~ 7,
+                                              name == q_name[8] | name == q_name[13] ~ 8,
+                                              name == q_name[9] | name == q_name[12] ~ 9,
+                                              name == q_name[10] | name == q_name[11] ~ 10)) %>%
+    group_by(year, grouping) %>%
+    mutate(min = min(value),
+           max = max(value)) %>%
+    ungroup() -> dat
 
   dat %>%
-    ggplot2::ggplot(ggplot2::aes(year, median)) +
-    ggplot2::geom_ribbon(data = dplyr::filter(dat, year<=2020),
-                         ggplot2::aes(ymin = lci, ymax = uci), alpha = 0.3) +
-    ggplot2::geom_ribbon(data = dplyr::filter(dat, year>=2020),
-                         ggplot2::aes(ymin = lci, ymax = uci), alpha = 0.2) +
-    ggplot2::geom_line(data = dplyr::filter(dat, year<=2020),
-                       ggplot2::aes(year, median)) +
-    ggplot2::geom_line(data = dplyr::filter(dat, year>=2020),
-                       ggplot2::aes(year, median), lty = 2) +
-    ggplot2::geom_hline(yintercept = c(bby$B40/1000, bby$B35/1000),
-                        lty = c(3, 1), color = c(2, 1)) +
+    ggplot2::ggplot(ggplot2::aes(year, group = grouping)) +
+    ggplot2::geom_ribbon(ggplot2::aes(ymin = min, ymax = max), alpha = 0.07) +
+    ggplot2::geom_line(ggplot2::aes(y = median)) +
     ggplot2::scale_x_continuous(breaks = funcr::tickr(dat, year, 10, start = 1960)$breaks,
                                 labels = funcr::tickr(dat, year, 10, start = 1960)$labels) +
     ggplot2::ylab("Spawning biomass (kt)\n") +
     ggplot2::xlab("\nYear") +
     ggplot2::expand_limits(y = 0) +
-    ggplot2::theme(legend.position = "none")
+    ggplot2::geom_hline(yintercept = c(bby$B40/1000, bby$B35/1000),
+                        lty = c(3, 1)) +
+    scico::scale_fill_scico()
 
   ggplot2::ggsave(here::here(year, model, "figs", "swath.png"), width = 6.5, height = 5.5, units = "in", dpi = 200)
 }
