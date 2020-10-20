@@ -65,9 +65,9 @@ process_results <- function(year, model, model_name, data_name,
   # MCMC parameters ----
 
   npar = readBin(PSV, what = integer(), n=1)
-  mcmc = readBin(PSV, what = numeric(), n = (npar * mcmc / mcsave))
+  mcmcs = readBin(PSV, what = numeric(), n = (npar * mcmc / mcsave))
   close(PSV)
-  mcmc_params = matrix(mcmc, byrow=TRUE, ncol=npar)
+  mcmc_params = matrix(mcmcs, byrow=TRUE, ncol=npar)
   mcmc_params = mcmc_params[501:nrow(mcmc_params),]
   colnames(mcmc_params) = STD$name[1:ncol(mcmc_params)]
   write.csv(mcmc_params, here::here(year, model, "processed", "mcmc.csv"), row.names = FALSE)
@@ -133,7 +133,7 @@ process_results <- function(year, model, model_name, data_name,
     write.csv(here::here(year, model, "processed", "survey.csv"), row.names = FALSE)
 
 
-  # Recruitment ----
+  # recruitment ----
 
   N = REP[grep("Numbers", REP):(grep("Obs_P_fish_age", REP)-2)]
   t = NA
@@ -150,13 +150,13 @@ process_results <- function(year, model, model_name, data_name,
     write.csv(here::here(year, model, "processed", "bio_rec_f.csv"), row.names = FALSE)
 
 
-  # Selectivity ----
+  # selectivity ----
   data.frame(age = ages,
              fish = rep_item("Fishery_Selectivity"),
              srv1 = rep_item("TWL Survey_Selectivity")) %>%
     write.csv(here::here(year, model, "processed", "selex.csv"), row.names = FALSE)
 
-  # Yield ratio B40 & B35----
+  # yield ratio B40 & B35----
 
   data.frame(B40 = STD$value[which(STD$name=="B40")],
     B35 = as.numeric(REP[(grep("B_35",REP)+1):(grep("F_40",REP)[1]-1)]),

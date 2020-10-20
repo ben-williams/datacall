@@ -24,3 +24,5 @@ Imports:
     magrittr,
     cowplot,
     ggplot2
+SystemRequirements:
+    ADMB (>= 12.1)

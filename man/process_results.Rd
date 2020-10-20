@@ -13,6 +13,7 @@ process_results(
   plus_age,
   mcmc,
   mcsave,
+  survey = NULL,
   ...
 )
 }
