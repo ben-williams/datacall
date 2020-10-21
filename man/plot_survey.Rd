@@ -17,3 +17,6 @@ plot_survey(year, model)
 \description{
 Plot survey biomass
 }
+\examples{
+plot_survey(year, model)
+}

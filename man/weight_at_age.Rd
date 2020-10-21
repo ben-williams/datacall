@@ -19,3 +19,6 @@ weight_at_age(year, admb_home, rec_age)
 \description{
 estimate allometric relationship and weight-at-age
 }
+\examples{
+weight_at_age(year = 2020, admb_home = "C:/Program Files (x86)/ADMB-12.1", rec_age = 2)
+}

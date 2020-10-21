@@ -10,10 +10,15 @@ plot_rec_ssb(year, model, rec_age)
 \item{year}{model year}
 
 \item{model}{folder model is in}
+
+\item{rec_age}{age at first recruitment}
 }
 \value{
 
 }
 \description{
 Recruitment/SSB plot
+}
+\examples{
+plot_rec_ssb(year, model, rec_age)
 }

@@ -7,6 +7,8 @@
 plot_swath(year, model)
 }
 \arguments{
+\item{year}{assessment year}
+
 \item{model}{the folder with the model in it}
 }
 \value{
@@ -14,4 +16,7 @@ plot_swath(year, model)
 }
 \description{
 Swath plot
+}
+\examples{
+plot_swath(year, model)
 }

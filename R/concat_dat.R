@@ -1,13 +1,14 @@
 #' Concatenate a .dat file
 #'
 #' @param year assessment year
-#' @param model folder that the .tpl will be in
+#' @param model folder that the `.tpl` will be in
 #' @param rec_age recruitment age
 #' @param plus_age plus age group
 #' @param spawn_mo spawning month
 #' @param n_ageagenumber of age error transmission matrices default is 1
-#' @param n_sizeage # of size at age transmission matrices default is 1
-#'
+#' @param n_sizeage number of size at age transmission matrices default is 1
+#' @param lenbins set to base unless using alt in which case the file should be in the `user_input`` folder and the name needs to be provided e.g., `lengthbins.csv` - the column must be named `len_bin`
+#' @retro not yet implemented
 #' @return
 #' @export concat_dat
 #'

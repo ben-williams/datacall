@@ -6,7 +6,7 @@
 #' @return
 #' @export plot_selex
 #'
-#' @examples
+#' @examples plot_selex(year, model)
 plot_selex <- function(year, model){
 
   if (!dir.exists(here::here(year, model, "processed"))){

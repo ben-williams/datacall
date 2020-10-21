@@ -15,13 +15,16 @@ purrit(obs, pred = NULL, rec_age, plus_age, comp = "length", lenbins = NULL)
 
 \item{plus_age}{plus age group}
 
-\item{comp}{"age" or "length"}
+\item{comp}{\code{age} or \code{length} - default is length}
 
-\item{lenbins}{set to base unless using alt in which case the location and file name need to be provided}
+\item{lenbins}{set to base unless using alt in which case the file should be in the \verb{user_input`` folder and the name needs to be provided e.g., }lengthbins.csv\verb{- the column must be named}len_bin`}
 }
 \value{
 
 }
 \description{
 helper function for comp data
+}
+\examples{
+purrit(obs, pred = NULL, rec_age, plus_age, comp = "length", lenbins = "lengthbins.csv")
 }

@@ -7,8 +7,8 @@
 #' @return
 #' @export clean_catch
 #'
-#' @examples
-clean_catch <- function(year, TAC, old_catch = NULL){
+#' @examples clean_catch(year, TAC, old_catch = )
+clean_catch <- function(year = 2020, TAC = c(3333, 2222, 1111)){
 
   if(!is.null(old_catch)){
     old_catch = read.csv(here::here(year, "data", "user_input", old_catch))

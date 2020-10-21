@@ -4,7 +4,7 @@
 \alias{clean_catch}
 \title{clean up catch data}
 \usage{
-clean_catch(year, TAC, old_catch = NULL)
+clean_catch(year = 2020, TAC = c(3333, 2222, 1111))
 }
 \arguments{
 \item{year}{\itemize{
@@ -24,4 +24,7 @@ clean_catch(year, TAC, old_catch = NULL)
 }
 \description{
 clean up catch data
+}
+\examples{
+clean_catch(year, TAC, old_catch = )
 }

@@ -1,13 +1,13 @@
 
 #' Swath plot
 #'
-#' @param year
+#' @param year assessment year
 #' @param model   the folder with the model in it
 #'
 #' @return
 #' @export plot_swath
 #'
-#' @examples
+#' @examples plot_swath(year, model)
 plot_swath <- function(year, model){
 
   if (!dir.exists(here::here(year, model, "processed"))){

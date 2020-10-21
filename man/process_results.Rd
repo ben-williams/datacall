@@ -8,7 +8,7 @@ process_results(
   year,
   model,
   model_name,
-  data_name,
+  dat_name,
   rec_age,
   plus_age,
   mcmc,
@@ -24,11 +24,17 @@ process_results(
 
 \item{model_name}{name of the model e.g., updated_nr}
 
-\item{data_name}{name of dat file e.g., goa_nr_2020}
+\item{dat_name}{name of dat file e.g., goa_nr_2020}
 
 \item{rec_age}{recruitment age}
 
 \item{plus_age}{plus age group}
+
+\item{mcmc}{number of mcmcs run}
+
+\item{mcsave}{the number of mcmcs saved}
+
+\item{survey}{file name (stored in the "user_input" folder) if NULL it pulls the design-based estimate from AKFIN}
 
 \item{...}{future functions}
 }
@@ -37,4 +43,8 @@ process_results(
 }
 \description{
 Process model results for tables and figs
+}
+\examples{
+process_results (year = 2020, model = m18.2, model_name = "goa_nr", dat_name = "goa_nr_2020", rec_age = 2, plus_age = 45, mcmc = 1e+07, mcsave = 2000, survey = "VAST_GAP.csv")
+
 }

@@ -7,11 +7,18 @@
 survey_age_comp(year, rec_age, plus_age)
 }
 \arguments{
-\item{plus_age}{}
+\item{year}{assessment year}
+
+\item{rec_age}{recruitment age}
+
+\item{plus_age}{plus group age}
 }
 \value{
 
 }
 \description{
 Survey age comp
+}
+\examples{
+survey_age_comp(year = 2020, rec_age = 2, plus_age = 45)
 }

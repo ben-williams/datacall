@@ -4,13 +4,13 @@
 #' @param pred predicted data from .rep file (if used)
 #' @param rec_age  recruitement age
 #' @param plus_age plus age group
-#' @param comp "age" or "length"
-#' @param lenbins set to base unless using alt in which case the location and file name need to be provided
+#' @param comp `age` or `length` - default is length
+#' @param lenbins set to base unless using alt in which case the file should be in the `user_input`` folder and the name needs to be provided e.g., `lengthbins.csv` - the column must be named `len_bin`
 #'
 #' @return
 #' @export purrit
 #'
-#' @examples
+#' @examples purrit(obs, pred = NULL, rec_age, plus_age, comp = "length", lenbins = "lengthbins.csv")
 purrit <- function(obs, pred = NULL, rec_age, plus_age, comp = "length", lenbins = NULL){
 
   if(is.null(lenbins)){

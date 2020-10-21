@@ -6,7 +6,7 @@
 #' @return
 #' @export weight_at_age
 #'
-#' @examples
+#' @examples weight_at_age(year = 2020, admb_home = "C:/Program Files (x86)/ADMB-12.1", rec_age = 2)
 weight_at_age <- function(year, admb_home, rec_age){
 
   if(is.null(admb_home)){

@@ -1,13 +1,13 @@
 #' Survey age comp
 #'
-#' @param year
-#' @param rec_age
-#' @param plus_age
+#' @param year assessment year
+#' @param rec_age recruitment age
+#' @param plus_age plus group age
 #'
 #' @return
 #' @export survey_age_comp
 #'
-#' @examples
+#' @examples survey_age_comp(year = 2020, rec_age = 2, plus_age = 45)
 survey_age_comp <- function(year, rec_age, plus_age){
 
   read.csv(here::here(year, "data", "raw", "srv_age_specimens.csv")) %>%

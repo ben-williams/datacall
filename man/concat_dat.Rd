@@ -19,7 +19,7 @@ concat_dat(
 \arguments{
 \item{year}{assessment year}
 
-\item{model}{folder that the .tpl will be in}
+\item{model}{folder that the \code{.tpl} will be in}
 
 \item{rec_age}{recruitment age}
 
@@ -27,7 +27,9 @@ concat_dat(
 
 \item{spawn_mo}{spawning month}
 
-\item{n_sizeage}{of size at age transmission matrices default is 1}
+\item{n_sizeage}{number of size at age transmission matrices default is 1}
+
+\item{lenbins}{set to base unless using alt in which case the file should be in the \verb{user_input`` folder and the name needs to be provided e.g., }lengthbins.csv\verb{- the column must be named}len_bin`}
 
 \item{n_ageagenumber}{of age error transmission matrices default is 1}
 }

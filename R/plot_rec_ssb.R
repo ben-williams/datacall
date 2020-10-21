@@ -3,11 +3,12 @@
 #'
 #' @param year model year
 #' @param model folder model is in
+#' @param rec_age age at first recruitment
 #'
 #' @return
 #' @export plot_rec_ssb
 #'
-#' @examples
+#' @examples plot_rec_ssb(year, model, rec_age)
 plot_rec_ssb <- function(year, model, rec_age){
 
   if (!dir.exists(here::here(year, model, "processed"))){

@@ -17,3 +17,6 @@ plot_selex(year, model)
 \description{
 Plot selectivity at age
 }
+\examples{
+plot_selex(year, model)
+}

@@ -6,7 +6,7 @@
 #' @return
 #' @export plot_survey
 #'
-#' @examples
+#' @examples plot_survey(year, model)
 plot_survey <- function(year, model){
 
   if (!dir.exists(here::here(year, model, "processed"))){
