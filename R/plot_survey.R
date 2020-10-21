@@ -14,7 +14,7 @@ plot_survey <- function(year, model){
   }
 
   read.csv(here::here(year, model, "processed", "survey.csv")) %>%
-    rename_all(tolower) %>%
+    dplyr::rename_all(tolower) %>%
     dplyr::select(year = starts_with("y"),
                   Observed = starts_with("bio"),
                   Predicted = pred,

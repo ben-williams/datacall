@@ -41,9 +41,9 @@ plot_biomass <- function(year, model){
     dplyr::select(-tot, -bio) -> dat
 
   dat %>%
-    ggplot2::ggplot(aes(year, biomass)) +
+    ggplot2::ggplot(ggplot2::aes(year, biomass)) +
     ggplot2::geom_line() +
-    ggplot2::geom_ribbon(aes(ymin = lci, ymax = uci), alpha = 0.1) +
+    ggplot2::geom_ribbon(ggplot2::aes(ymin = lci, ymax = uci), alpha = 0.1) +
     ggplot2::facet_wrap(~name, dir = "v", scales = "free_y") +
     ggplot2::scale_y_continuous(name = "Biomass (kt)\n", labels = scales::comma) +
     ggplot2::expand_limits(y = 0) +
@@ -52,5 +52,5 @@ plot_biomass <- function(year, model){
                                 labels = funcr::tickr(dat, year, 10, start = 1960)$labels) +
     funcr::theme_report()
 
-  ggsave(here::here(year, model, "figs", "est_biomass.png"), width = 6.5, height = 6.5, units = "in", dpi = 200)
+  ggplot2::ggsave(here::here(year, model, "figs", "est_biomass.png"), width = 6.5, height = 6.5, units = "in", dpi = 200)
 }

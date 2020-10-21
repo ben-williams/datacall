@@ -41,7 +41,8 @@ plot_params <- function(year, model, model_name){
                    F40, paste0("spawn_biom_", yrs)) %>%
      dplyr::mutate(group = 1:dplyr::n()) %>%
      tidyr::pivot_longer(-group) %>%
-     dplyr::mutate(name = gsub('[[:digit:]]+', '', name),
+     dplyr::mutate(years = as.numeric(gsub('\\D+','', name)),
+                   name = gsub('[[:digit:]]+', '', name),
                    value = dplyr::case_when(name=="spawn_biom_" ~ value / 1000,
                                             name=="tot_biom_" ~ value / 1000,
                                             name=="ABC" ~ value / 1000,
@@ -60,7 +61,7 @@ plot_params <- function(year, model, model_name){
                            mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::theme(axis.title.y = ggplot2::element_blank()) +
      ggplot2::xlab(expression("Trawl survey catchability ("*italic(q)*")")) +
-     theme(legend.position = "none")
+     ggplot2::theme(legend.position = "none")
 
 
    p2 = dat %>%
@@ -74,7 +75,7 @@ plot_params <- function(year, model, model_name){
                            mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::ylab("Probability density\n") +
      ggplot2::xlab(expression("Natural mortality ("*italic(M)*")")) +
-     theme(legend.position = "none")
+     ggplot2::theme(legend.position = "none")
 
    p3 = dat %>%
      dplyr::filter(name == "F") %>%
@@ -87,7 +88,7 @@ plot_params <- function(year, model, model_name){
                            mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::theme(axis.title.y = ggplot2::element_blank()) +
      ggplot2::xlab(expression(italic(F)["40%"])) +
-     theme(legend.position = "none")
+      ggplot2::theme(legend.position = "none")
 
    p4 = dat %>%
      dplyr::filter(name == "ABC") %>%
@@ -100,38 +101,38 @@ plot_params <- function(year, model, model_name){
                            mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::theme(axis.title.y = ggplot2::element_blank()) +
      ggplot2::xlab("ABC (kt)") +
-     theme(legend.position = "none")
+      ggplot2::theme(legend.position = "none")
 
 
    p5 = dat %>%
-     dplyr::filter(name == "tot_biom_") %>%
+     dplyr::filter(name == "tot_biom_", years == year) %>%
      ggplot2::ggplot(ggplot2::aes(value)) +
      # facet_wrap(~name, scales = "free", dir = "v") +
      ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..], fill = ..density..),
-                             color = NA, bins = 60) +
+                             color = NA, bins = 37) +
      scico::scale_fill_scico(palette = "devon", direction = -1) +
      ggplot2::geom_segment(data = dplyr::filter(fits, name == "tot_biom_"),
                            mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::theme(axis.title.y = ggplot2::element_blank()) +
      ggplot2::xlab("Current total biomass (kt)") +
-     theme(legend.position = "none")
+      ggplot2::theme(legend.position = "none")
 
    p6 = dat %>%
-     dplyr::filter(name == "spawn_biom_") %>%
+     dplyr::filter(name == "spawn_biom_", years == year) %>%
      ggplot2::ggplot(ggplot2::aes(value)) +
      # facet_wrap(~name, scales = "free", dir = "v") +
      ggplot2::geom_histogram(ggplot2::aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..], fill = ..density..),
-                             color = NA, bins = 60) +
+                             color = NA, bins = 37) +
      scico::scale_fill_scico(palette = "devon", direction = -1) +
      ggplot2::geom_segment(data = dplyr::filter(fits, name == "spawn_biom_"),
                            mapping = ggplot2::aes(x = value, xend = value, y = 0, yend = Inf), size = 2, color = "darkgray") +
      ggplot2::theme(axis.title.y = ggplot2::element_blank()) +
      ggplot2::xlab("Current spawning biomass (kt)") +
-     theme(legend.position = "none")
+      ggplot2::theme(legend.position = "none")
 
    p7 <- cowplot::plot_grid(p1, p4, p2, p5, p3, p6, align = "v", ncol = 2, rel_heights = c(0.5, 0.5))
 
    # cowplot::save_plot(here::here(year, model, "figs", "hists.png"), p7, nrow = 3, ncol = 2)
-   ggsave(here::here(year, model, "figs", "hists.png"), p7, width = 6.5, height = 8.5, units = "in", dpi = 200)
+   ggplot2::ggsave(here::here(year, model, "figs", "hists.png"), p7, width = 6.5, height = 8.5, units = "in", dpi = 200)
 
 }

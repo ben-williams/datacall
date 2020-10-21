@@ -18,9 +18,9 @@ plot_swath <- function(year, model){
   ggplot2::theme_set(funcr::theme_report())
 
   # establish quantiles
-  q_name <- map_chr(seq(.025,.975,.05), ~ paste0("q", .x*100))
-  q_fun <- map(seq(.025,.975,.05), ~ partial(quantile, probs = .x, na.rm = TRUE)) %>%
-    set_names(nm = q_name)
+  q_name <- purrr::map_chr(seq(.025,.975,.05), ~ paste0("q", .x*100))
+  q_fun <- purrr::map(seq(.025,.975,.05), ~ purrr::partial(quantile, probs = .x, na.rm = TRUE)) %>%
+    purrr::set_names(nm = q_name)
 
   # read in data calculate quantiles/median and plot
   read.csv(here::here(year, model, "processed", "ages_yrs.csv"))$yrs -> yrs
@@ -34,7 +34,7 @@ plot_swath <- function(year, model){
     dplyr::mutate(year = as.numeric(stringr::str_extract(name, "[[:digit:]]+")),
                   biomass = biomass / 1000) %>%
     dplyr::group_by(year) %>%
-    dplyr::summarise_at(vars(biomass), funs(!!!q_fun, median)) %>%
+    dplyr::summarise_at(dplyr::vars(biomass), tibble::lst(!!!q_fun, median)) %>%
     tidyr::pivot_longer(-c(year, median)) %>%
     dplyr::mutate(grouping = dplyr::case_when(name == q_name[1] | name == q_name[20] ~ 1,
                                               name == q_name[2] | name == q_name[19] ~ 2,
@@ -46,10 +46,10 @@ plot_swath <- function(year, model){
                                               name == q_name[8] | name == q_name[13] ~ 8,
                                               name == q_name[9] | name == q_name[12] ~ 9,
                                               name == q_name[10] | name == q_name[11] ~ 10)) %>%
-    group_by(year, grouping) %>%
-    mutate(min = min(value),
+    dplyr::group_by(year, grouping) %>%
+    dplyr::mutate(min = min(value),
            max = max(value)) %>%
-    ungroup() -> dat
+    dplyr::ungroup() -> dat
 
   dat %>%
     ggplot2::ggplot(ggplot2::aes(year, group = grouping)) +
