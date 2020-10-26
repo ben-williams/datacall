@@ -2,12 +2,15 @@
 #'
 #' @param year assessment year
 #' @param model folder the model is in
+#' @param model_name name of the .tpl file (no extension)
 #'
 #' @return
 #' @export proj_data
 #'
 #' @examples
-proj_data <- function(year, model){
+proj_data <- function(year, model, model_name){
+
+  REP = readLines(here::here(year, "base", paste0(model_name, ".rep")))
 
   proj = readLines(here::here(year, model, "proj.dat"), warn=FALSE)
 
@@ -23,6 +26,7 @@ proj_data <- function(year, model){
   saa = strsplit(proj[grep("#_Selectivity_fishery_scaled_to_max_at_one", proj) + 1], " ")[[1]]
   saa = as.numeric(saa[2:length(saa)])
   m = as.numeric(strsplit(proj[grep("#_Natural_Mortality", proj) + 1], " ")[[1]][[2]])
+  ofl = as.numeric(strsplit(REP[grep(paste0("OFL for ", year-1), REP) + 1] [[2]]," "))
 
-  list(best = data.frame(age, naa, waa, saa), m = m)
+  list(best = data.frame(age, naa, waa, saa), m = m, last_ofl = ofl)
 }
