@@ -1,8 +1,8 @@
 #' Fishery age composition
 #'
-#' @param year
-#' @param rec_age
-#' @param plus_age
+#' @param year assessment year
+#' @param rec_age recruitment age
+#' @param plus_age plus age group
 #'
 #' @return
 #' @export  fish_age_comp

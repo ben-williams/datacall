@@ -6,7 +6,7 @@
 #' @param rec_age recruitment age
 #'
 #' @return
-#' @export mod_year
+#' @export recruit_table
 #'
 #' @examples recruit_table(year, model, model_name, rec_age)
 recruit_table <- function(year, model, model_name, rec_age){

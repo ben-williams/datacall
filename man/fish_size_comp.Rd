@@ -7,7 +7,11 @@
 fish_size_comp(YEAR, rec_age, lenbins = NULL)
 }
 \arguments{
-\item{rec_age}{}
+\item{rec_age}{recruitment age}
+
+\item{lenbins}{lenbin file if left NULL it looks for here::here(year, "data", "user_input", "len_bin_labels.csv")}
+
+\item{year}{assessment year}
 }
 \value{
 

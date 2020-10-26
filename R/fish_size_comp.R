@@ -1,9 +1,9 @@
 
 #' Fishery size composition data
 #'
-#' @param year
-#' @param lenbins
-#' @param rec_age
+#' @param year assessment year
+#' @param lenbins lenbin file if left NULL it looks for here::here(year, "data", "user_input", "len_bin_labels.csv")
+#' @param rec_age recruitment age
 #'
 #' @return
 #' @export fish_size_comp
@@ -12,7 +12,7 @@
 fish_size_comp <- function(YEAR, rec_age, lenbins = NULL){
 
     if(is.null(lenbins)){
-      lenbins = read.csv(here::here(YEAR, "data/user_input/len_bin_labels.csv"))$len_bins
+      lenbins = read.csv(here::here(YEAR, "data", "user_input", "len_bin_labels.csv"))$len_bins
     } else {
       lenbins = read.csv(here::here(year, "data", "user_input", lenbins))$len_bins
     }

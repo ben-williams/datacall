@@ -28,6 +28,9 @@ process_results <- function(year, model, model_name, dat_name,
     dir.create(here::here(year, model, "figs"), recursive=TRUE)
   }
 
+  if (!dir.exists(here::here(year, model, "tables"))){
+    dir.create(here::here(year, model, "tables"), recursive=TRUE)
+  }
 
   # helper functions
   rep_item <- function(name){
@@ -147,7 +150,8 @@ process_results <- function(year, model, model_name, dat_name,
   pred_rec = t[!is.na(t)]
 
   # biomass & F & recruits ----
-  data.frame(tot_biom = rep_item("Tot_biom"),
+  data.frame(year = yrs,
+             tot_biom = rep_item("Tot_biom"),
              sp_biom = rep_item("SpBiom"),
              F = rep_item("Fully_selected_F"),
              recruits = pred_rec) %>%

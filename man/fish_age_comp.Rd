@@ -7,7 +7,11 @@
 fish_age_comp(year, rec_age, plus_age)
 }
 \arguments{
-\item{plus_age}{}
+\item{year}{assessment year}
+
+\item{rec_age}{recruitment age}
+
+\item{plus_age}{plus age group}
 }
 \value{
 
